@@ -27,6 +27,7 @@ class EnglishTranslation {
     TranslationKey.goToHome: "Go to home",
     TranslationKey.language: "Language",
     TranslationKey.system: "System",
+    TranslationKey.theme: "Theme",
     TranslationKey.darkTheme: "Dark theme",
     TranslationKey.lightTheme: "Light theme",
   };

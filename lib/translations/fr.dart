@@ -26,6 +26,7 @@ class FrenchTranslation {
     TranslationKey.eliminatedPlayers: "Joueurs éliminés",
     TranslationKey.goToHome: "Retourner au menu",
     TranslationKey.language: "Langue",
+    TranslationKey.theme: "Thème",
     TranslationKey.system: "Système",
     TranslationKey.darkTheme: "Thème sombre",
     TranslationKey.lightTheme: "Thème clair",

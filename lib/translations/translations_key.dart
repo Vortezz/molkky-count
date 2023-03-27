@@ -22,6 +22,7 @@ enum TranslationKey {
   eliminatedPlayers,
   goToHome,
   language,
+  theme,
   system,
   darkTheme,
   lightTheme,
