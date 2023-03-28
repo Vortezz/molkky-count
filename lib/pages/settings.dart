@@ -151,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(
                   client.getTranslation(
-                    TranslationKey.language,
+                    TranslationKey.theme,
                   ),
                   style: TextStyle(
                     color: client.getColor(

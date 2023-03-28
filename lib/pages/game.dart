@@ -22,6 +22,8 @@ class _GamePageState extends State<GamePage> {
   late Player currentPlayer;
   int playerPoints = 0;
 
+  late bool firstPlayOfTheGame;
+
   List<int> selectedPins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   TextEditingController controller = TextEditingController();
@@ -34,6 +36,7 @@ class _GamePageState extends State<GamePage> {
     client.on("reloadState", (state) {
       setState(() {});
     });
+    firstPlayOfTheGame = true;
     super.initState();
   }
 
@@ -380,6 +383,39 @@ class _GamePageState extends State<GamePage> {
                 ),
               ),
             ),
+            firstPlayOfTheGame
+                ? Container()
+                : Container(
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: client.getColor(ColorName.color1),
+                        elevation: 0,
+                        shape: StadiumBorder(),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          backToPreviousPlayer();
+                        });
+                      },
+                      child: Text(
+                        client.getTranslation(
+                          TranslationKey.previous,
+                        ),
+                        style: TextStyle(
+                          color: client.getColor(
+                            ColorName.text1,
+                          ),
+                          fontSize: 23,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+                  ),
             Container(
               width: MediaQuery.of(context).size.width * 0.8,
               height: client.game.players.length * 50 + 50,
@@ -439,6 +475,8 @@ class _GamePageState extends State<GamePage> {
     } else {
       resolvePlay(player);
     }
+
+    firstPlayOfTheGame = false;
   }
 
   void resolvePlay(Player player) {
@@ -522,5 +560,43 @@ class _GamePageState extends State<GamePage> {
     }
 
     selectedPins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  }
+
+  void backToPreviousPlayer() {
+    if (client.game.players.isEmpty) {
+      return;
+    }
+
+    client.game.players.addFirst(currentPlayer);
+
+    Player player = client.game.players.removeLast();
+
+    int lastScore;
+
+    if (player.pointsHistory.isEmpty) {
+      lastScore = 0;
+      player.currentScore = 0;
+    } else {
+      lastScore = player.pointsHistory.last;
+      player.currentScore -= lastScore;
+      player.pointsHistory.removeLast();
+    }
+
+    currentPlayer = player;
+    controller.text = lastScore.toString();
+    playerPoints = lastScore;
+
+    firstPlayOfTheGame = player.pointsHistory.isEmpty;
+
+    if (!firstPlayOfTheGame) {
+      return;
+    }
+
+    for (Player player in client.game.players) {
+      if (player.pointsHistory.isNotEmpty) {
+        firstPlayOfTheGame = false;
+        break;
+      }
+    }
   }
 }
