@@ -17,6 +17,7 @@ class EnglishTranslation {
     TranslationKey.afterThreeFailsNone: "Do Nothing",
     TranslationKey.afterThreeFailsResetPoints: "Reset Points",
     TranslationKey.next: "Next",
+    TranslationKey.previous: "Previous",
     TranslationKey.player: "Player",
     TranslationKey.team: "Team",
     TranslationKey.chooseTeamName: "Choose team name",

@@ -25,5 +25,5 @@ enum TranslationKey {
   theme,
   system,
   darkTheme,
-  lightTheme,
+  lightTheme, previous,
 }

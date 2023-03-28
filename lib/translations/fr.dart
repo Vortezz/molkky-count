@@ -17,6 +17,7 @@ class FrenchTranslation {
     TranslationKey.afterThreeFailsNone: "Ne rien faire",
     TranslationKey.afterThreeFailsResetPoints: "Retour à zéro",
     TranslationKey.next: "Suivant",
+    TranslationKey.previous: "Précédent",
     TranslationKey.player: "Joueur",
     TranslationKey.team: "Equipe",
     TranslationKey.chooseTeamName: "Choisissez le nom de l'équipe",
