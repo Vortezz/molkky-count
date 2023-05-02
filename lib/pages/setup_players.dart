@@ -5,6 +5,7 @@ import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/pages/game.dart';
+import 'package:molkkycount/pages/home.dart';
 import 'package:molkkycount/translations/translations_key.dart';
 
 class SetupPlayersPage extends StatefulWidget {
@@ -38,6 +39,34 @@ class _MyHomePageState extends State<SetupPlayersPage> {
     return Scaffold(
       backgroundColor: client.getColor(
         ColorName.background,
+      ),
+      appBar: AppBar(
+        backgroundColor: client.getColor(
+          ColorName.background,
+        ),
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
+        ),
+        title: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => HomePage(
+                  client: client,
+                ),
+              ),
+              (route) => false,
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
+          splashRadius: 20,
+        ),
       ),
       body: Center(
         child: Column(

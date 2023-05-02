@@ -151,13 +151,14 @@ class _MyHomePageState extends State<HomePage> {
                 ),
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => GameSettingsPage(
-                          client: client,
-                        ),
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => GameSettingsPage(
+                        client: client,
                       ),
-                      (route) => false);
+                    ),
+                    (route) => false,
+                  );
                 },
                 child: Text(
                   client.getTranslation(
