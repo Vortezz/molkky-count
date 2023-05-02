@@ -5,6 +5,7 @@ import 'package:molkkycount/class/game_settings.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/enums/three_fail_action.dart';
+import 'package:molkkycount/pages/home.dart';
 import 'package:molkkycount/pages/setup_players.dart';
 
 import '../translations/translations_key.dart';
@@ -36,6 +37,34 @@ class _MyHomePageState extends State<GameSettingsPage> {
     return Scaffold(
       backgroundColor: client.getColor(
         ColorName.background,
+      ),
+      appBar: AppBar(
+        backgroundColor: client.getColor(
+          ColorName.background,
+        ),
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
+        ),
+        title: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => HomePage(
+                  client: client,
+                ),
+              ),
+              (route) => false,
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+          ),
+          splashRadius: 20,
+        ),
       ),
       body: Center(
         child: Column(
@@ -274,13 +303,14 @@ class _MyHomePageState extends State<GameSettingsPage> {
                   );
                   client.game.players.addAll(List.filled(players, Player("")));
                   Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => SetupPlayersPage(
-                          client: client,
-                        ),
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => SetupPlayersPage(
+                        client: client,
                       ),
-                      (route) => false);
+                    ),
+                    (route) => false,
+                  );
                 },
                 child: Text(
                   client.getTranslation(
