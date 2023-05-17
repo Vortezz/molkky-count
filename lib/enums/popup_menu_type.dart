@@ -1,0 +1,4 @@
+enum PopupMenuType {
+  settings,
+  about,
+}

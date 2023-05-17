@@ -31,6 +31,11 @@ class EnglishTranslation {
     TranslationKey.theme: "Theme",
     TranslationKey.darkTheme: "Dark theme",
     TranslationKey.lightTheme: "Light theme",
+    TranslationKey.about: "About",
+    TranslationKey.aboutDescription:
+        "This application was made by Vortezz to help you count points in a molkky game. It is open source and available on GitHub.",
+    TranslationKey.aboutTerms:
+        "The terms of use are available at this address:",
   };
 
   String? getTranslationFromName(TranslationKey translationKey) {
