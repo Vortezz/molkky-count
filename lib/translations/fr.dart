@@ -31,6 +31,11 @@ class FrenchTranslation {
     TranslationKey.system: "Système",
     TranslationKey.darkTheme: "Thème sombre",
     TranslationKey.lightTheme: "Thème clair",
+    TranslationKey.about: "A propos",
+    TranslationKey.aboutDescription:
+        "Cette application a été réalisée par Vortezz pour vous aider à compter les points d'une partie de molkky. Elle est open source et disponible sur GitHub.",
+    TranslationKey.aboutTerms:
+        "Les conditions d'utilisation sont disponibles à cette adresse :",
   };
 
   String? getTranslationFromName(TranslationKey translationKey) {

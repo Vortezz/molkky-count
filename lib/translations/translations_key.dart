@@ -27,4 +27,7 @@ enum TranslationKey {
   darkTheme,
   lightTheme,
   previous,
+  about,
+  aboutDescription,
+  aboutTerms,
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
+import 'package:molkkycount/enums/popup_menu_type.dart';
+import 'package:molkkycount/pages/about.dart';
 import 'package:molkkycount/pages/game_settings.dart';
 import 'package:molkkycount/pages/games_history.dart';
 import 'package:molkkycount/pages/settings.dart';
@@ -63,25 +65,49 @@ class _MyHomePageState extends State<HomePage> {
                 TranslationKey.gameHistory,
               ),
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => SettingsPage(
-                      client: client,
+            PopupMenuButton<PopupMenuType>(
+              onSelected: (PopupMenuType item) {
+                if (item == PopupMenuType.settings) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => SettingsPage(
+                        client: client,
+                      ),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                } else if (item == PopupMenuType.about) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => AboutPage(
+                        client: client,
+                      ),
+                    ),
+                    (Route<dynamic> route) => false,
+                  );
+                }
+              },
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<PopupMenuType>>[
+                PopupMenuItem<PopupMenuType>(
+                  value: PopupMenuType.settings,
+                  child: Text(
+                    client.getTranslation(
+                      TranslationKey.settings,
                     ),
                   ),
-                  (Route<dynamic> route) => false,
-                );
-              },
-              icon: const Icon(
-                Icons.settings,
-              ),
-              splashRadius: 20,
-              tooltip: client.getTranslation(
-                TranslationKey.settings,
-              ),
+                ),
+                PopupMenuItem<PopupMenuType>(
+                  value: PopupMenuType.about,
+                  child: Text(
+                    client.getTranslation(
+                      TranslationKey.about,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 name: molkkycount
 description: Count Molkky is now a child game
 publish_to: 'none'
-version: 1.0.3
+version: 1.0.4
 
 environment:
   sdk: ">=3.0.0-290.3.beta <4.0.0"
@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.0.15
   intl: ^0.17.0
+  url_launcher: ^6.1.11
 
 dev_dependencies:
   flutter_test:
