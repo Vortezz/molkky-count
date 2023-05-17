@@ -48,7 +48,7 @@ android {
         applicationId "dev.vortezz.molkkycount"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 6
+        versionCode 7
         versionName flutterVersionName
     }
 
