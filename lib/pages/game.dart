@@ -418,15 +418,25 @@ class _GamePageState extends State<GamePage> {
                   ),
             Container(
               width: MediaQuery.of(context).size.width * 0.8,
-              height: client.game.players.length * 50 + 50,
+              height: (client.game.players.length +
+                          client.game.eliminatedPlayers.length) *
+                      50 +
+                  50,
               child: ListView.builder(
-                itemCount: client.game.players.length + 1,
+                itemCount: client.game.players.length +
+                    1 +
+                    client.game.eliminatedPlayers.length,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   List<Player> players = client.game.players.toList();
                   players.add(currentPlayer);
                   players
                       .sort((a, b) => b.currentScore.compareTo(a.currentScore));
+                  List<Player> eliminatedPlayers =
+                      client.game.eliminatedPlayers.toList();
+                  eliminatedPlayers
+                      .sort((a, b) => b.currentScore.compareTo(a.currentScore));
+                  players.addAll(eliminatedPlayers);
 
                   return Container(
                     margin: const EdgeInsets.only(
@@ -442,6 +452,10 @@ class _GamePageState extends State<GamePage> {
                             color: client.getColor(
                               ColorName.text1,
                             ),
+                            decoration: client.game.eliminatedPlayers
+                                    .contains(players[index])
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
                             fontSize: 23,
                             fontWeight: FontWeight.w300,
                           ),
@@ -452,6 +466,10 @@ class _GamePageState extends State<GamePage> {
                             color: client.getColor(
                               ColorName.text1,
                             ),
+                            decoration: client.game.eliminatedPlayers
+                                    .contains(players[index])
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
                             fontSize: 23,
                             fontWeight: FontWeight.w300,
                           ),

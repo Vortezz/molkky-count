@@ -6,7 +6,7 @@ Map<String, Map<String, EventCallback>> messages = {};
 Map<String, List<String>> onceTokens = {};
 int lastUid = -1;
 
-class EventEmitter {
+mixin EventEmitter {
   void _deliver(message, data) {
     if (!messages.containsKey(message)) {
       return;
