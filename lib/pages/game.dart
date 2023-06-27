@@ -530,6 +530,9 @@ class _GamePageState extends State<GamePage> {
         if (client.game.gameSettings.whenThreeFailInRow ==
             ThreeFailAction.resetPoints) {
           player.failedAttemps = 0;
+
+          currentScore = 0;
+          playerPoints = 0;
         } else {
           player.pointsHistory.add(currentScore);
           client.game.eliminatedPlayers.add(player);
