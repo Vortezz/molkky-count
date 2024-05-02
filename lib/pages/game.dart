@@ -360,7 +360,7 @@ class _GamePageState extends State<GamePage> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: client.getColor(ColorName.color1),
+                  backgroundColor: client.getColor(ColorName.color1),
                   elevation: 0,
                   shape: StadiumBorder(),
                 ),
@@ -393,7 +393,7 @@ class _GamePageState extends State<GamePage> {
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: client.getColor(ColorName.color1),
+                        backgroundColor: client.getColor(ColorName.color1),
                         elevation: 0,
                         shape: StadiumBorder(),
                       ),
@@ -619,5 +619,9 @@ class _GamePageState extends State<GamePage> {
         break;
       }
     }
+
+    setState(() {
+      // Force the state to reload
+    });
   }
 }

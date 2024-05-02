@@ -135,7 +135,7 @@ class _MyHomePageState extends State<SetupPlayersPage> {
                   ),
                   hintStyle: TextStyle(
                     color: client.getColor(
-                      ColorName.text2,
+                      ColorName.text1,
                     ),
                     fontSize: 16,
                     fontWeight: FontWeight.w300,
@@ -162,7 +162,7 @@ class _MyHomePageState extends State<SetupPlayersPage> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: client.getColor(ColorName.color1),
+                  backgroundColor: client.getColor(ColorName.color1),
                   elevation: 0,
                   shape: StadiumBorder(),
                 ),

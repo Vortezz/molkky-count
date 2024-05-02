@@ -197,7 +197,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: client.getLanguage().value != 2
+                  onPressed: client.getTheme().value != 2
                       ? () {
                           setState(() {
                             client.setAppTheme(AppTheme.getNext(
