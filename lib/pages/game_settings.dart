@@ -290,7 +290,7 @@ class _MyHomePageState extends State<GameSettingsPage> {
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: client.getColor(ColorName.color1),
+                  backgroundColor: client.getColor(ColorName.color1),
                   elevation: 0,
                   shape: StadiumBorder(),
                 ),
