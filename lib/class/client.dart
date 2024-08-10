@@ -28,7 +28,7 @@ class Client with EventEmitter {
   late GamesHistory _gamesHistory;
 
   Game game = Game(
-    GameSettings(),
+    gameSettings: GameSettings(),
   );
 
   late SharedPreferences preferences;

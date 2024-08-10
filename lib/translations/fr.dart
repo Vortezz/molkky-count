@@ -4,15 +4,18 @@ class FrenchTranslation {
   Map<TranslationKey, String> enTranslations = {
     TranslationKey.description:
         "Compter les points du molkky est maintenant un jeu d'enfant !",
+    TranslationKey.hi: "Bonjour 👋",
     TranslationKey.startGame: "Démarrer une partie",
     TranslationKey.settings: "Paramètres",
     TranslationKey.gameHistory: "Historique des parties",
     TranslationKey.gameSettings: "Paramètres de la partie",
-    TranslationKey.players: "Joueurs",
-    TranslationKey.mode: "Mode de partie",
-    TranslationKey.cosyMode: "Cosy",
-    TranslationKey.compactMode: "Compact",
-    TranslationKey.afterThreeFails: "Après 3 échecs",
+    TranslationKey.players: "Joueurs 🧑‍🤝‍🧑",
+    TranslationKey.type: "Type 🌐",
+    TranslationKey.typeExplanation: "Choisissez l'interface de comptage des points",
+    TranslationKey.cosyType: "Cosy",
+    TranslationKey.compactType: "Compact",
+    TranslationKey.afterThreeFails: "Après 3 échecs 💀",
+    TranslationKey.afterThreeFailsExplanation: "Choisissez l'action à effectuer après 3 échecs consécutifs",
     TranslationKey.afterThreeFailsEliminate: "Eliminer",
     TranslationKey.afterThreeFailsNone: "Ne rien faire",
     TranslationKey.afterThreeFailsResetPoints: "Retour à zéro",
@@ -36,6 +39,8 @@ class FrenchTranslation {
         "Cette application a été réalisée par Vortezz pour vous aider à compter les points d'une partie de molkky. Elle est open source et disponible sur GitHub.",
     TranslationKey.aboutTerms:
         "Les conditions d'utilisation sont disponibles à cette adresse :",
+    TranslationKey.skip: "Passer",
+    TranslationKey.back: "Retour",
   };
 
   String? getTranslationFromName(TranslationKey translationKey) {

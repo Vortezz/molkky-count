@@ -2,7 +2,7 @@ enum ColorName {
   background,
   text1,
   text2,
-  color1,
+  button,
   color2,
   color3,
 }
