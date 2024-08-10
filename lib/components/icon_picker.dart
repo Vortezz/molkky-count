@@ -29,7 +29,7 @@ class IconPicker extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: data.map((e) {
           int index = data.indexOf(e);
           return ElevatedButton(

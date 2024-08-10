@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/components/text.dart';
-import 'package:molkkycount/translations/translations_key.dart';
 
 class CompactGameComponent extends StatelessWidget {
   CompactGameComponent(
@@ -19,6 +18,7 @@ class CompactGameComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController controller =
         TextEditingController(text: playerPoints.toString());
+    FocusNode focusNode = FocusNode();
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -30,7 +30,7 @@ class CompactGameComponent extends StatelessWidget {
           ),
           child: CustomText(
             client: client,
-            translationKey: TranslationKey.enterScore,
+            text: client.translate("game.enter_score"),
             textType: TextType.text,
             color: ColorName.text1,
           ),
@@ -63,6 +63,7 @@ class CompactGameComponent extends StatelessWidget {
               Container(
                 width: 50,
                 child: TextFormField(
+                  focusNode: focusNode,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -77,9 +78,7 @@ class CompactGameComponent extends StatelessWidget {
                   ),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: client.getTranslation(
-                      TranslationKey.chooseTeamName,
-                    ),
+                    hintText: "0",
                     hintStyle: TextStyle(
                       color: client.getColor(
                         ColorName.text2,
@@ -89,22 +88,25 @@ class CompactGameComponent extends StatelessWidget {
                     ),
                   ),
                   onChanged: (value) {
-                    // setState(() {
-                    //   if (value != "") {
-                    //     var points = int.parse(value);
-                    //     if (points > 12) {
-                    //       points = 12;
-                    //       controller.text = points.toString();
-                    //     } else if (points < 0) {
-                    //       points = 0;
-                    //       controller.text = points.toString();
-                    //     }
-                    //     playerPoints = points;
-                    //   } else {
-                    //     controller.text = "0";
-                    //     playerPoints = 0;
-                    //   }
-                    // });
+                    if (value != "") {
+                      var points = int.parse(value);
+                      if (points > 12) {
+                        points = 12;
+                        controller.text = points.toString();
+                      } else if (points < 0) {
+                        points = 0;
+                        controller.text = points.toString();
+                      } else {
+                        controller.text = points.toString();
+                      }
+                      setPlayerPoints(points);
+                    } else {
+                      controller.text = "0";
+                      setPlayerPoints(0);
+                    }
+
+                    // TODO : Check for focus state
+                    focusNode.requestFocus();
                   },
                   controller: controller,
                 ),

@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/games_history.dart';
 import 'package:molkkycount/colors/colors_name.dart';
+import 'package:molkkycount/components/button.dart';
 import 'package:molkkycount/pages/home.dart';
-import 'package:molkkycount/translations/translations_key.dart';
 
 import '../class/player.dart';
 
@@ -58,9 +60,18 @@ class _MyHomePageState extends State<EndPage> {
       backgroundColor: client.getColor(
         ColorName.background,
       ),
+      appBar: AppBar(
+        backgroundColor: client.getColor(
+          ColorName.background,
+        ),
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
+      ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
@@ -68,9 +79,7 @@ class _MyHomePageState extends State<EndPage> {
                 top: 10,
               ),
               child: Text(
-                client.getTranslation(
-                  TranslationKey.gameEnded,
-                ),
+                client.translate("end.title"),
                 style: TextStyle(
                   color: client.getColor(
                     ColorName.text1,
@@ -81,64 +90,76 @@ class _MyHomePageState extends State<EndPage> {
               ),
             ),
             Container(
+              margin: const EdgeInsets.only(
+                top: 20,
+                bottom: 20,
+              ),
               width: MediaQuery.of(context).size.width * 0.8,
+              height: min(
+                  (client.game.players.length +
+                          client.game.eliminatedPlayers.length) *
+                      45,
+                  MediaQuery.of(context).size.height * 0.5),
               child: ListView.builder(
-                itemExtent: 27,
-                shrinkWrap: true,
-                itemCount: client.game.players.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
+                padding: const EdgeInsets.all(0),
+                itemCount: client.game.players.length +
+                    client.game.eliminatedPlayers.length,
+                itemBuilder: (context, index) {
                   List<Player> players = client.game.players.toList();
                   players
                       .sort((a, b) => b.currentScore.compareTo(a.currentScore));
+                  List<Player> eliminatedPlayers =
+                      client.game.eliminatedPlayers.toList();
+                  eliminatedPlayers
+                      .sort((a, b) => b.currentScore.compareTo(a.currentScore));
+                  players.addAll(eliminatedPlayers);
+
+                  Player player = players[index];
 
                   return Container(
                     margin: const EdgeInsets.only(
-                      top: 2.5,
-                      bottom: 2.5,
+                      bottom: 10,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            index == 0
-                                ? Container(
-                                    margin: const EdgeInsets.only(
-                                      right: 10,
-                                    ),
-                                    child: const Icon(
-                                      Icons.workspace_premium,
-                                      color: Colors.yellow,
-                                    ),
-                                  )
-                                : index == 1
-                                    ? Container(
-                                        margin: const EdgeInsets.only(
-                                          right: 10,
-                                        ),
-                                        child: const Icon(
-                                          Icons.workspace_premium,
-                                          color: Colors.grey,
-                                        ),
-                                      )
-                                    : index == 2
-                                        ? Container(
-                                            margin: const EdgeInsets.only(
-                                              right: 10,
-                                            ),
-                                            child: const Icon(
-                                              Icons.workspace_premium,
-                                              color: Color(0xFFcd7f32),
-                                            ),
-                                          )
-                                        : Container(),
                             Text(
-                              players[index].name,
+                              "${index + 1}.",
+                              style: TextStyle(
+                                color: index == 0
+                                    ? Colors.yellow
+                                    : index == 1
+                                        ? Colors.grey
+                                        : index == 2
+                                            ? Colors.brown
+                                            : client.getColor(
+                                                ColorName.text1,
+                                              ),
+                                fontSize: 23,
+                                fontWeight: index < 3
+                                    ? FontWeight.w800
+                                    : FontWeight.w300,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              player.name,
                               style: TextStyle(
                                 color: client.getColor(
                                   ColorName.text1,
                                 ),
+                                decoration: client.game.eliminatedPlayers
+                                        .contains(player)
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                                decorationColor: client.getColor(
+                                  ColorName.text1,
+                                ),
+                                decorationThickness: 4.0,
                                 fontSize: 23,
                                 fontWeight: FontWeight.w300,
                               ),
@@ -146,11 +167,19 @@ class _MyHomePageState extends State<EndPage> {
                           ],
                         ),
                         Text(
-                          players[index].currentScore.toString(),
+                          player.currentScore.toString(),
                           style: TextStyle(
                             color: client.getColor(
                               ColorName.text1,
                             ),
+                            decoration:
+                                client.game.eliminatedPlayers.contains(player)
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                            decorationColor: client.getColor(
+                              ColorName.text1,
+                            ),
+                            decorationThickness: 4.0,
                             fontSize: 23,
                             fontWeight: FontWeight.w300,
                           ),
@@ -161,111 +190,24 @@ class _MyHomePageState extends State<EndPage> {
                 },
               ),
             ),
-            client.game.eliminatedPlayers.isNotEmpty
-                ? Column(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        margin: EdgeInsets.only(
-                          top: 30,
-                        ),
-                        child: Text(
-                          client
-                              .getTranslation(TranslationKey.eliminatedPlayers),
-                          style: TextStyle(
-                            color: client.getColor(
-                              ColorName.color2,
-                            ),
-                            fontSize: 23,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: ListView.builder(
-                          itemExtent: 27,
-                          shrinkWrap: true,
-                          itemCount: client.game.eliminatedPlayers.length,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (BuildContext context, int index) {
-                            List<Player> players =
-                                client.game.eliminatedPlayers;
-                            players.sort((a, b) =>
-                                b.currentScore.compareTo(a.currentScore));
-
-                            return Container(
-                              margin: const EdgeInsets.only(
-                                top: 2.5,
-                                bottom: 2.5,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    players[index].name,
-                                    style: TextStyle(
-                                      color: client.getColor(
-                                        ColorName.color2,
-                                      ),
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                  Text(
-                                    players[index].currentScore.toString(),
-                                    style: TextStyle(
-                                      color: client.getColor(
-                                        ColorName.color2,
-                                      ),
-                                      fontSize: 23,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  )
-                : Container(),
             Container(
               margin: const EdgeInsets.only(
-                top: 40,
+                bottom: 20,
               ),
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: client.getColor(ColorName.button),
-                  elevation: 0,
-                  shape: StadiumBorder(),
-                ),
+              child: Button(
+                text: client.translate("end.home"),
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => HomePage(
-                          client: client,
-                        ),
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => HomePage(
+                        client: client,
                       ),
-                      (route) => false);
-                },
-                child: Text(
-                  client.getTranslation(
-                    TranslationKey.goToHome,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
                     ),
-                    fontSize: 23,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
+                    (route) => false,
+                  );
+                },
+                client: client,
               ),
             ),
           ],

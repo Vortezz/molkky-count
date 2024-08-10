@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/translations/translations_key.dart';
 
 enum TextType { button, title, subtitle, text, emphasis, bottomText }
 
@@ -9,26 +8,24 @@ class CustomText extends StatelessWidget {
   const CustomText({
     Key? key,
     this.text,
-    this.translationKey,
     this.color,
     this.textType,
     required this.client,
+    this.textAlign = TextAlign.center,
   }) : super(key: key);
 
   final Client client;
 
   final String? text;
-  final TranslationKey? translationKey;
   final ColorName? color;
   final TextType? textType;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      translationKey != null
-          ? client.getTranslation(translationKey!)
-          : text ?? "",
-      textAlign: TextAlign.center,
+      text ?? "",
+      textAlign: textAlign,
       style: TextStyle(
         fontWeight: getFontWeight(),
         fontSize: getFontSize(),
@@ -45,7 +42,7 @@ class CustomText extends StatelessWidget {
       case TextType.title:
         return 36;
       case TextType.subtitle:
-        return 32;
+        return 24;
       case TextType.text:
         return 18;
       case TextType.emphasis:

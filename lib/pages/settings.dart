@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/colors/theme.dart';
+import 'package:molkkycount/enums/language.dart';
 import 'package:molkkycount/pages/home.dart';
-import 'package:molkkycount/translations/language.dart';
-import 'package:molkkycount/translations/translations_key.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key, required this.client}) : super(key: key);

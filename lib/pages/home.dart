@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/default_layout.dart';
+import 'package:molkkycount/components/button.dart';
 import 'package:molkkycount/components/text.dart';
-import 'package:molkkycount/pages/game_settings.dart';
-import 'package:molkkycount/translations/translations_key.dart';
+import 'package:molkkycount/pages/player_selection.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.client}) : super(key: key);
@@ -26,6 +25,10 @@ class _MyHomePageState extends State<HomePage> {
     client.on("reloadSettings", (state) {
       setState(() {});
     });
+
+    client.on("loaded", (state) {
+      setState(() {});
+    });
   }
 
   @override
@@ -40,75 +43,6 @@ class _MyHomePageState extends State<HomePage> {
             ColorName.text1,
           ),
         ),
-        //   title: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       IconButton(
-        //         onPressed: () {
-        //           Navigator.pushAndRemoveUntil(
-        //             context,
-        //             MaterialPageRoute(
-        //               builder: (BuildContext context) => GamesHistoryPage(
-        //                 client: client,
-        //               ),
-        //             ),
-        //             (Route<dynamic> route) => false,
-        //           );
-        //         },
-        //         icon: const Icon(
-        //           Icons.watch_later,
-        //         ),
-        //         splashRadius: 20,
-        //         tooltip: client.getTranslation(
-        //           TranslationKey.gameHistory,
-        //         ),
-        //       ),
-        //       PopupMenuButton<PopupMenuType>(
-        //         onSelected: (PopupMenuType item) {
-        //           if (item == PopupMenuType.settings) {
-        //             Navigator.pushAndRemoveUntil(
-        //               context,
-        //               MaterialPageRoute(
-        //                 builder: (BuildContext context) => SettingsPage(
-        //                   client: client,
-        //                 ),
-        //               ),
-        //               (Route<dynamic> route) => false,
-        //             );
-        //           } else if (item == PopupMenuType.about) {
-        //             Navigator.pushAndRemoveUntil(
-        //               context,
-        //               MaterialPageRoute(
-        //                 builder: (BuildContext context) => AboutPage(
-        //                   client: client,
-        //                 ),
-        //               ),
-        //               (Route<dynamic> route) => false,
-        //             );
-        //           }
-        //         },
-        //         itemBuilder: (BuildContext context) =>
-        //             <PopupMenuEntry<PopupMenuType>>[
-        //           PopupMenuItem<PopupMenuType>(
-        //             value: PopupMenuType.settings,
-        //             child: Text(
-        //               client.getTranslation(
-        //                 TranslationKey.settings,
-        //               ),
-        //             ),
-        //           ),
-        //           PopupMenuItem<PopupMenuType>(
-        //             value: PopupMenuType.about,
-        //             child: Text(
-        //               client.getTranslation(
-        //                 TranslationKey.about,
-        //               ),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ],
-        //   ),
         backgroundColor: client.getColor(
           ColorName.background,
         ),
@@ -116,28 +50,56 @@ class _MyHomePageState extends State<HomePage> {
         centerTitle: true,
       ),
       body: Center(
-        child: DefaultLayout(
-          client: client,
-          titleKey: TranslationKey.hi,
-          buttonKey: TranslationKey.startGame,
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => GameSettingsPage(
-                  client: client,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 256,
+                  width: 256,
+                  child: Image.asset(
+                    "assets/logo_1000.png",
+                  ),
+                  margin: const EdgeInsets.only(
+                    bottom: 22,
+                  ),
                 ),
-              ),
-              (Route<dynamic> route) => false,
-            );
-          },
-          middleWidget: Align(
-            alignment: Alignment.center,
-            child: CustomText(
-              client: client,
-              translationKey: TranslationKey.description,
+                CustomText(
+                  text: client.translate("home.title"),
+                  client: client,
+                  textType: TextType.title,
+                  color: ColorName.text1,
+                ),
+                CustomText(
+                  text: client.translate("home.description"),
+                  client: client,
+                  textType: TextType.text,
+                  color: ColorName.text1,
+                ),
+              ],
             ),
-          ),
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 20,
+              ),
+              child: Button(
+                client: client,
+                text: client.translate("home.start_game"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => PlayerSelectionPage(
+                        client: client,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

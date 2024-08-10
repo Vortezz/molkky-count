@@ -9,40 +9,42 @@ class Button extends StatelessWidget {
     required this.text,
     required this.onPressed,
     required this.client,
-    this.isDisabled,
+    this.isColored = true,
+    this.isDisabled = false,
   }) : super(key: key);
 
   final Client client;
   final String text;
   final Function() onPressed;
-  final bool? isDisabled;
+  final bool isDisabled;
+  final bool isColored;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 256,
-      height: 56,
-      child: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            minimumSize: const Size(256, 56),
-            backgroundColor: isDisabled == null || !isDisabled!
-                ? client.getColor(ColorName.button)
-                : client.getColor(ColorName.text2),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      margin: const EdgeInsets.only(
+        top: 10,
+      ),
+      height: 80,
+      child: ElevatedButton(
+        onPressed: isDisabled ? null : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isColored
+              ? client.getColor(ColorName.button)
+              : client.getColor(ColorName.text1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              10,
             ),
           ),
-          onPressed: () {
-            if (isDisabled == null || !isDisabled!) {
-              onPressed();
-            }
-          },
-          child: CustomText(
-            client: client,
-            text: text,
-            textType: TextType.button,
-          ),
+          disabledBackgroundColor: client.getColor(ColorName.text2),
+        ),
+        child: CustomText(
+          client: client,
+          text: text,
+          textType: TextType.button,
+          color: isColored ? ColorName.text1 : ColorName.background,
         ),
       ),
     );

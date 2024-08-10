@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:molkkycount/class/event_emitter.dart';
 import 'package:molkkycount/class/game.dart';
 import 'package:molkkycount/class/game_settings.dart';
@@ -8,16 +10,15 @@ import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/colors/dark.dart';
 import 'package:molkkycount/colors/light.dart';
 import 'package:molkkycount/colors/theme.dart';
-import 'package:molkkycount/translations/en.dart';
-import 'package:molkkycount/translations/fr.dart';
-import 'package:molkkycount/translations/language.dart';
-import 'package:molkkycount/translations/translations_key.dart';
+import 'package:molkkycount/enums/language.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Client with EventEmitter {
   Client() {
     init();
   }
+
+  Map<String, Map<String, String>> translations = {};
 
   AppTheme _appTheme = AppTheme.dark;
   bool systemTheme = false;
@@ -36,10 +37,24 @@ class Client with EventEmitter {
   final DarkColors darkColors = DarkColors();
   final LightColors lightColors = LightColors();
 
-  final EnglishTranslation englishTranslation = EnglishTranslation();
-  final FrenchTranslation frenchTranslation = FrenchTranslation();
-
   Future<void> init() async {
+    for (String lang in ["en", "fr"]) {
+      String translationJson =
+          await rootBundle.loadString("assets/lang/$lang.json");
+
+      Map<String, dynamic> json = jsonDecode(translationJson);
+
+      Map<String, String> translation = {};
+
+      for (MapEntry entry in json.entries) {
+        translation[entry.key] = entry.value as String;
+      }
+
+      translations[lang] = translation;
+
+      print("Loaded $lang translations (${translations[lang]!.length} keys)");
+    }
+
     preferences = await SharedPreferences.getInstance();
 
     if (!preferences.containsKey("molkky.theme")) {
@@ -94,6 +109,8 @@ class Client with EventEmitter {
 
     _gamesHistory =
         GamesHistory(preferences.getString("molkky.history") ?? "{}", this);
+
+    emit("loaded");
   }
 
   void setAppTheme(AppTheme appTheme) {
@@ -148,31 +165,38 @@ class Client with EventEmitter {
     }
   }
 
-  String getTranslation(TranslationKey translationKey) {
-    switch (_language) {
-      case Language.en:
-        return englishTranslation.getTranslationFromName(translationKey) ?? "";
-      case Language.fr:
-        return frenchTranslation.getTranslationFromName(translationKey) ?? "";
-      default:
-        if (_language == Language.system) {
-          if (systemLanguage == "en") {
-            return englishTranslation.getTranslationFromName(translationKey) ??
-                "";
-          } else if (systemLanguage == "fr") {
-            return frenchTranslation.getTranslationFromName(translationKey) ??
-                "";
-          }
-        }
-        return englishTranslation.getTranslationFromName(translationKey) ?? "";
-    }
-  }
-
   void writeHistory(String json) {
     preferences.setString("molkky.history", json);
   }
 
   void reloadState() {
     emit("reloadState");
+  }
+
+  String _getLanguage() {
+    switch (_language) {
+      case Language.en:
+        return "en";
+      case Language.fr:
+        return "fr";
+      default:
+        return systemLanguage;
+    }
+  }
+
+  String translate(String key, [Map<String, String>? replacements]) {
+    replacements ??= Map.identity();
+
+    String text = key;
+    if (translations[_getLanguage()] != null &&
+        translations[_getLanguage()]!.containsKey(key)) {
+      text = translations[_getLanguage()]![key] ?? key;
+    }
+
+    for (MapEntry entry in replacements.entries) {
+      text = text.replaceAll("{${entry.key}}", entry.value);
+    }
+
+    return text;
   }
 }

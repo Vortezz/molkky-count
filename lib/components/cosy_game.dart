@@ -3,7 +3,6 @@ import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/components/game_pin.dart';
 import 'package:molkkycount/components/text.dart';
-import 'package:molkkycount/translations/translations_key.dart';
 
 class CosyGameComponent extends StatelessWidget {
   const CosyGameComponent(
@@ -24,7 +23,7 @@ class CosyGameComponent extends StatelessWidget {
           ),
           child: CustomText(
             client: client,
-            translationKey: TranslationKey.selectPins,
+            text: client.translate("game.fallen_pins"),
             textType: TextType.text,
             color: ColorName.text1,
           ),

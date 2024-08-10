@@ -25,6 +25,8 @@ flutter:
   assets:
     - assets/logo_192.png
     - assets/logo_1000.png
+    - assets/lang/en.json
+    - assets/lang/fr.json
   fonts:
     - family: OpenSans
       fonts:
