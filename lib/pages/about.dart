@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/pages/home.dart';
-import 'package:molkkycount/translations/translations_key.dart';
+import 'package:molkkycount/components/text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatefulWidget {
@@ -39,33 +38,14 @@ class _AboutPageState extends State<AboutPage> {
             ColorName.text1,
           ),
         ),
-        title: IconButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => HomePage(
-                  client: client,
-                ),
-              ),
-              (route) => false,
-            );
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-          splashRadius: 20,
-        ),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              client.getTranslation(
-                TranslationKey.about,
-              ),
+              client.translate("about.title"),
               style: TextStyle(
                 color: client.getColor(
                   ColorName.text1,
@@ -78,74 +58,53 @@ class _AboutPageState extends State<AboutPage> {
               margin: const EdgeInsets.only(
                 top: 20,
               ),
-              width: 240,
-              child: Text(
-                client.getTranslation(
-                  TranslationKey.aboutDescription,
-                ),
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                  color: client.getColor(
-                    ColorName.text1,
-                  ),
-                  fontSize: 20,
-                  fontWeight: FontWeight.w300,
-                ),
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: CustomText(
+                client: client,
+                text: client.translate("about.description"),
+                color: ColorName.text1,
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(
-                top: 20,
-                bottom: 20,
-              ),
-              width: 240,
-              child: Column(
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    client.getTranslation(
-                      TranslationKey.aboutTerms,
-                    ),
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(
+                  IconButton(
+                    onPressed: () {
+                      launchUrl(
+                        Uri.parse(
+                          "https://vortezz.dev/privacy",
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.note_alt_rounded,
                       color: client.getColor(
                         ColorName.text1,
                       ),
-                      fontSize: 20,
-                      fontWeight: FontWeight.w300,
+                      size: 32,
                     ),
                   ),
-                  InkWell(
-                    child: Text(
-                      'https://vortezz.dev/terms    ',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: client.getColor(
-                          ColorName.text1,
+                  IconButton(
+                    onPressed: () {
+                      launchUrl(
+                        Uri.parse(
+                          "https://github.com/Vortezz/molkky-count",
                         ),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w300,
+                      );
+                    },
+                    icon: Icon(
+                      Icons.code,
+                      color: client.getColor(
+                        ColorName.text1,
                       ),
-                    ),
-                    onTap: () => launchUrl(
-                      Uri.parse("https://vortezz.dev/terms"),
+                      size: 32,
                     ),
                   ),
                 ],
               ),
             ),
-            IconButton(
-              onPressed: () {
-                launchUrl(
-                  Uri.parse("https://github.com/Vortezz/molkky-count"),
-                );
-              },
-              icon: Icon(
-                Icons.code,
-                color: client.getColor(
-                  ColorName.text1,
-                ),
-              ),
-            ),
+            Container(),
           ],
         ),
       ),

@@ -1,34 +1,39 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/game.dart';
 import 'package:molkkycount/class/game_settings.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
+import 'package:molkkycount/components/button.dart';
+import 'package:molkkycount/components/icon_picker.dart';
+import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/enums/three_fail_action.dart';
-import 'package:molkkycount/pages/home.dart';
-import 'package:molkkycount/pages/setup_players.dart';
-
-import '../translations/translations_key.dart';
+import 'package:molkkycount/pages/game.dart';
 
 class GameSettingsPage extends StatefulWidget {
-  const GameSettingsPage({Key? key, required this.client}) : super(key: key);
+  const GameSettingsPage(
+      {super.key, required this.client, required this.players});
 
   final Client client;
+  final List<Player> players;
 
   @override
-  State<GameSettingsPage> createState() => _MyHomePageState();
+  State<GameSettingsPage> createState() => _GameSettingsPageState();
 }
 
-class _MyHomePageState extends State<GameSettingsPage> {
+class _GameSettingsPageState extends State<GameSettingsPage> {
   late Client client;
+  late List<Player> players;
 
-  int players = 2;
-  ThreeFailAction eliminateAfterThreeFails = ThreeFailAction.eliminate;
-  bool cosyMode = false;
+  ThreeFailAction threeFailAction = ThreeFailAction.nothing;
+  bool isCosy = false;
 
   @override
   void initState() {
     client = widget.client;
+    players = widget.players;
     super.initState();
   }
 
@@ -42,291 +47,162 @@ class _MyHomePageState extends State<GameSettingsPage> {
         backgroundColor: client.getColor(
           ColorName.background,
         ),
-        elevation: 0,
         iconTheme: IconThemeData(
           color: client.getColor(
             ColorName.text1,
           ),
         ),
-        title: IconButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => HomePage(
-                  client: client,
-                ),
-              ),
-              (route) => false,
-            );
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-          splashRadius: 20,
-        ),
+        elevation: 0,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(
-                top: 10,
+      body: Container(
+        padding: EdgeInsets.only(
+          left: 10,
+          right: 10,
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustomText(
+                text: client.translate("game_settings.title"),
+                client: client,
+                textType: TextType.title,
+                color: ColorName.text1,
               ),
-              child: Text(
-                client.getTranslation(
-                  TranslationKey.gameSettings,
-                ),
-                style: TextStyle(
-                  color: client.getColor(
-                    ColorName.text1,
-                  ),
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  client.getTranslation(
-                    TranslationKey.players,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: players > 2
-                      ? () {
-                          setState(() {
-                            players--;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.remove,
-                    color: players > 2
-                        ? client.getColor(ColorName.text1)
-                        : client.getColor(ColorName.text2),
-                  ),
-                ),
-                Text(
-                  players.toString(),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: players < 12
-                      ? () {
-                          setState(() {
-                            players++;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.add,
-                    color: players < 12
-                        ? client.getColor(ColorName.text1)
-                        : client.getColor(ColorName.text2),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  client.getTranslation(
-                    TranslationKey.afterThreeFails,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: eliminateAfterThreeFails.value != 0
-                      ? () {
-                          setState(() {
-                            eliminateAfterThreeFails =
-                                ThreeFailAction.getPrevious(
-                                      eliminateAfterThreeFails,
-                                    ) ??
-                                    ThreeFailAction.nothing;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: eliminateAfterThreeFails.value != 0
-                        ? client.getColor(ColorName.text1)
-                        : client.getColor(ColorName.text2),
-                  ),
-                ),
-                Text(
-                  eliminateAfterThreeFails.value == 0
-                      ? client.getTranslation(
-                          TranslationKey.afterThreeFailsNone,
-                        )
-                      : eliminateAfterThreeFails.value == 1
-                          ? client.getTranslation(
-                              TranslationKey.afterThreeFailsEliminate,
-                            )
-                          : client.getTranslation(
-                              TranslationKey.afterThreeFailsResetPoints,
-                            ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: eliminateAfterThreeFails.value != 2
-                      ? () {
-                          setState(() {
-                            eliminateAfterThreeFails = ThreeFailAction.getNext(
-                                  eliminateAfterThreeFails,
-                                ) ??
-                                ThreeFailAction.nothing;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    color: eliminateAfterThreeFails.value != 2
-                        ? client.getColor(ColorName.text1)
-                        : client.getColor(ColorName.text2),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  client.getTranslation(
-                    TranslationKey.mode,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: cosyMode
-                      ? () {
-                          setState(() {
-                            cosyMode = false;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: cosyMode
-                        ? client.getColor(ColorName.text1)
-                        : client.getColor(ColorName.text2),
-                  ),
-                ),
-                Text(
-                  cosyMode
-                      ? client.getTranslation(
-                          TranslationKey.cosyMode,
-                        )
-                      : client.getTranslation(
-                          TranslationKey.compactMode,
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Column(
+                  children: [
+                    Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: CustomText(
+                          text: client.translate("game_settings.three_fails"),
+                          client: client,
+                          textType: TextType.emphasis,
+                          color: ColorName.text1,
                         ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: !cosyMode
-                      ? () {
-                          setState(() {
-                            cosyMode = true;
-                          });
-                        }
-                      : null,
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    color: !cosyMode
-                        ? client.getColor(ColorName.text1)
-                        : client.getColor(ColorName.text2),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              margin: const EdgeInsets.only(
-                top: 10,
-              ),
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: client.getColor(ColorName.color1),
-                  elevation: 0,
-                  shape: StadiumBorder(),
-                ),
-                onPressed: () {
-                  GameSettings gameSettings = GameSettings();
-                  gameSettings.whenThreeFailInRow = eliminateAfterThreeFails;
-                  gameSettings.cosyMode = cosyMode;
-                  client.game = Game(
-                    gameSettings,
-                  );
-                  client.game.players.addAll(List.filled(players, Player("")));
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => SetupPlayersPage(
-                        client: client,
                       ),
                     ),
-                    (route) => false,
-                  );
-                },
-                child: Text(
-                  client.getTranslation(
-                    TranslationKey.next,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
+                    Container(
+                      margin: const EdgeInsets.only(
+                        bottom: 10,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: CustomText(
+                          text: client.translate(
+                              "game_settings.three_fails.description"),
+                          client: client,
+                          textType: TextType.text,
+                          color: ColorName.text1,
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
                     ),
-                    fontSize: 23,
-                    fontWeight: FontWeight.w300,
-                  ),
+                    IconPicker(
+                      client: client,
+                      data: [
+                        IconPickerData(
+                            icon: ThreeFailAction.nothing.icon,
+                            text: client.translate("three_fails.nothing")),
+                        IconPickerData(
+                            icon: ThreeFailAction.eliminate.icon,
+                            text: client.translate("three_fails.eliminate")),
+                        IconPickerData(
+                            icon: ThreeFailAction.resetPoints.icon,
+                            text: client.translate("three_fails.reset_points")),
+                      ],
+                      onPressed: (index) {
+                        setState(() {
+                          threeFailAction = ThreeFailAction.values[index];
+                        });
+                      },
+                      value: threeFailAction.index,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 30,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: CustomText(
+                          text: client.translate("game_settings.game_mode"),
+                          client: client,
+                          textType: TextType.emphasis,
+                          color: ColorName.text1,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        bottom: 10,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: CustomText(
+                          text: client
+                              .translate("game_settings.game_mode.description"),
+                          client: client,
+                          textType: TextType.text,
+                          color: ColorName.text1,
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ),
+                    IconPicker(
+                      client: client,
+                      data: [
+                        IconPickerData(
+                            icon: "🛋️",
+                            text: client.translate("game_mode.cosy")),
+                        IconPickerData(
+                            icon: "📝",
+                            text: client.translate("game_mode.compact")),
+                      ],
+                      onPressed: (index) {
+                        setState(() {
+                          isCosy = index == 0;
+                        });
+                      },
+                      value: isCosy ? 0 : 1,
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              Container(
+                margin: const EdgeInsets.only(
+                  bottom: 20,
+                ),
+                child: Button(
+                  client: client,
+                  text: client.translate("game_settings.start_game"),
+                  onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+
+                    client.game = Game(
+                      gameSettings: GameSettings(
+                        whenThreeFailInRow: threeFailAction,
+                        cosyType: isCosy,
+                      ),
+                    );
+
+                    client.game.players = Queue<Player>.from(players);
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GamePage(
+                          client: client,
+                        ),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,11 +1,12 @@
 enum ThreeFailAction {
-  nothing(0),
-  eliminate(1),
-  resetPoints(2);
+  nothing(0, "❌"),
+  eliminate(1, "💀"),
+  resetPoints(2, "🔄");
 
   final int value;
+  final String icon;
 
-  const ThreeFailAction(int i) : value = i;
+  const ThreeFailAction(this.value, this.icon);
 
   static ThreeFailAction? getNext(ThreeFailAction action) {
     switch (action) {

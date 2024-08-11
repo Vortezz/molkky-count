@@ -1,12 +1,17 @@
-class Player {
-  final String name;
-  final List<int> pointsHistory = [];
+import 'package:molkkycount/enums/team_status.dart';
 
-  bool hasWin = false;
+class Player {
+  Player({
+    required this.name,
+    required this.teamStatus,
+  });
+
+  final String name;
+  final TeamStatus teamStatus;
+  List<int> pointsHistory = [];
+
+  bool hasWon = false;
+  bool eliminated = false;
   int currentScore = 0;
   int failedAttemps = 0;
-
-  Player(
-    this.name,
-  );
 }

@@ -1,10 +1,10 @@
 name: molkkycount
 description: Count Molkky is now a child game
 publish_to: 'none'
-version: 1.1.2
+version: 1.2.0
 
 environment:
-  sdk: ">=3.1.0-163.1.beta <4.0.0"
+  sdk: ">=3.4.4 <4.0.0"
 
 dependencies:
   flutter:
@@ -13,6 +13,7 @@ dependencies:
   shared_preferences: ^2.0.15
   intl: ^0.17.0
   url_launcher: ^6.1.11
+  dropdown_button2: ^2.3.8
 
 dev_dependencies:
   flutter_test:
@@ -22,5 +23,16 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/logo_192.png
-    - lib/assets/logo_1000.png
+    - assets/logo_192.png
+    - assets/logo_1000.png
+    - assets/lang/en.json
+    - assets/lang/fr.json
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/OpenSans-ExtraBold.ttf
+          weight: 800
+        - asset: assets/OpenSans-Bold.ttf
+          weight: 600
+        - asset: assets/OpenSans-Regular.ttf
+          weight: 300

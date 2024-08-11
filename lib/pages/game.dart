@@ -1,11 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/game_pin.dart';
+import 'package:molkkycount/components/button.dart';
+import 'package:molkkycount/components/compact_game.dart';
+import 'package:molkkycount/components/cosy_game.dart';
+import 'package:molkkycount/components/edit_points.dart';
+import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/enums/three_fail_action.dart';
 import 'package:molkkycount/pages/end.dart';
-import 'package:molkkycount/translations/translations_key.dart';
+import 'package:molkkycount/pages/home.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({Key? key, required this.client}) : super(key: key);
@@ -22,8 +28,6 @@ class _GamePageState extends State<GamePage> {
   late Player currentPlayer;
   int playerPoints = 0;
 
-  late bool firstPlayOfTheGame;
-
   List<int> selectedPins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   TextEditingController controller = TextEditingController();
@@ -36,7 +40,6 @@ class _GamePageState extends State<GamePage> {
     client.on("reloadState", (state) {
       setState(() {});
     });
-    firstPlayOfTheGame = true;
     super.initState();
   }
 
@@ -46,150 +49,103 @@ class _GamePageState extends State<GamePage> {
       backgroundColor: client.getColor(
         ColorName.background,
       ),
+      appBar: AppBar(
+        backgroundColor: client.getColor(
+          ColorName.background,
+        ),
+        leading: IconButton(
+          color: client.getColor(
+            ColorName.text1,
+          ),
+          onPressed: () {
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: CustomText(
+                  client: client,
+                  text: client.translate(
+                    "game.quit.title",
+                  ),
+                  textType: TextType.subtitle,
+                  color: ColorName.black,
+                ),
+                content: CustomText(
+                  client: client,
+                  text: client.translate(
+                    "game.quit.content",
+                  ),
+                  color: ColorName.black,
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: CustomText(
+                      client: client,
+                      text: client.translate(
+                        "game.quit.cancel",
+                      ),
+                      color: ColorName.black,
+                      textType: TextType.emphasis,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage(
+                            client: client,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: CustomText(
+                      client: client,
+                      text: client.translate(
+                        "game.quit.leave",
+                      ),
+                      color: ColorName.color2,
+                      textType: TextType.emphasis,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.close,
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
+        ),
+        elevation: 0,
+      ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            client.game.gameSettings.cosyMode
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 10,
-                        ),
-                        child: Text(
-                          currentPlayer.name,
-                          style: TextStyle(
-                            color: currentPlayer.failedAttemps == 1 &&
-                                    client.game.gameSettings
-                                            .whenThreeFailInRow !=
-                                        ThreeFailAction.nothing
-                                ? client.getColor(
-                                    ColorName.color3,
-                                  )
-                                : currentPlayer.failedAttemps == 2 &&
-                                        client.game.gameSettings
-                                                .whenThreeFailInRow !=
-                                            ThreeFailAction.nothing
-                                    ? client.getColor(
-                                        ColorName.color2,
-                                      )
-                                    : client.getColor(
-                                        ColorName.text1,
-                                      ),
-                            fontSize: 32,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                          bottom: 10,
-                        ),
-                        child: Text(
-                          client.getTranslation(
-                            TranslationKey.selectPins,
-                          ),
-                          style: TextStyle(
-                            color: client.getColor(
-                              ColorName.text1,
-                            ),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 7,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 9,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 8,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 5,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 11,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 12,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 6,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 3,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 10,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 4,
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 1,
-                                ),
-                                GamePin(
-                                  client: client,
-                                  selectedPins: selectedPins,
-                                  number: 2,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+            CustomText(
+              client: client,
+              color: currentPlayer.failedAttemps == 1 &&
+                      client.game.gameSettings.whenThreeFailInRow !=
+                          ThreeFailAction.nothing
+                  ? ColorName.color3
+                  : currentPlayer.failedAttemps == 2 &&
+                          client.game.gameSettings.whenThreeFailInRow !=
+                              ThreeFailAction.nothing
+                      ? ColorName.color2
+                      : ColorName.text1,
+              text: currentPlayer.teamStatus.icon + " " + currentPlayer.name,
+              textType: TextType.title,
+            ),
+            client.game.gameSettings.cosyType
+                ? CosyGameComponent(
+                    client: client,
+                    selectedPins: selectedPins,
                   )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -197,237 +153,48 @@ class _GamePageState extends State<GamePage> {
                     children: [
                       Container(
                         margin: const EdgeInsets.only(
-                          top: 10,
+                          bottom: 10,
                         ),
-                        child: Text(
-                          currentPlayer.name,
-                          style: TextStyle(
-                            color: currentPlayer.failedAttemps == 1 &&
-                                    client.game.gameSettings
-                                            .whenThreeFailInRow !=
-                                        ThreeFailAction.nothing
-                                ? client.getColor(
-                                    ColorName.color3,
-                                  )
-                                : currentPlayer.failedAttemps == 2 &&
-                                        client.game.gameSettings
-                                                .whenThreeFailInRow !=
-                                            ThreeFailAction.nothing
-                                    ? client.getColor(
-                                        ColorName.color2,
-                                      )
-                                    : client.getColor(
-                                        ColorName.text1,
-                                      ),
-                            fontSize: 32,
-                            fontWeight: FontWeight.w800,
-                          ),
+                        child: CustomText(
+                          client: client,
+                          text: client.translate("game.enter_score"),
+                          textType: TextType.text,
+                          color: ColorName.text1,
                         ),
                       ),
-                      Text(
-                        client.getTranslation(
-                          TranslationKey.enterScore,
-                        ),
-                        style: TextStyle(
-                          color: client.getColor(
-                            ColorName.text1,
-                          ),
-                          fontSize: 20,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 10,
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              onPressed: playerPoints > 0
-                                  ? () {
-                                      setState(() {
-                                        playerPoints--;
-                                        controller.text =
-                                            playerPoints.toString();
-                                      });
-                                    }
-                                  : null,
-                              icon: Icon(
-                                Icons.remove,
-                                color: playerPoints > 0
-                                    ? client.getColor(ColorName.text1)
-                                    : client.getColor(ColorName.text2),
-                              ),
-                            ),
-                            Container(
-                              width: 50,
-                              child: TextField(
-                                keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: client.getColor(
-                                    ColorName.text1,
-                                  ),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                                cursorColor: client.getColor(
-                                  ColorName.text1,
-                                ),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: client.getTranslation(
-                                    TranslationKey.chooseTeamName,
-                                  ),
-                                  hintStyle: TextStyle(
-                                    color: client.getColor(
-                                      ColorName.text2,
-                                    ),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
-                                onSubmitted: (value) {
-                                  setState(() {
-                                    if (value != "") {
-                                      var points = int.parse(value);
-                                      if (points > 12) {
-                                        points = 12;
-                                        controller.text = points.toString();
-                                      } else if (points < 0) {
-                                        points = 0;
-                                        controller.text = points.toString();
-                                      }
-                                      playerPoints = points;
-                                    } else {
-                                      controller.text = "0";
-                                      playerPoints = 0;
-                                    }
-                                  });
-                                },
-                                onChanged: (value) {
-                                  setState(() {
-                                    if (value != "") {
-                                      var points = int.parse(value);
-                                      if (points > 12) {
-                                        points = 12;
-                                        controller.text = points.toString();
-                                      } else if (points < 0) {
-                                        points = 0;
-                                        controller.text = points.toString();
-                                      }
-                                      playerPoints = points;
-                                    } else {
-                                      controller.text = "0";
-                                      playerPoints = 0;
-                                    }
-                                  });
-                                },
-                                controller: controller,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: playerPoints < 12
-                                  ? () {
-                                      setState(() {
-                                        playerPoints++;
-                                        controller.text =
-                                            playerPoints.toString();
-                                      });
-                                    }
-                                  : null,
-                              icon: Icon(
-                                Icons.add,
-                                color: playerPoints < 12
-                                    ? client.getColor(ColorName.text1)
-                                    : client.getColor(ColorName.text2),
-                              ),
-                            ),
-                          ],
-                        ),
+                      CompactGameComponent(
+                        client: client,
+                        setPlayerPoints: (points, next) {
+                          setState(() {
+                            playerPoints = points;
+
+                            if (next) {
+                              resolvePlayerPoints(currentPlayer);
+                            }
+                          });
+                        },
+                        playerPoints: playerPoints,
                       ),
                     ],
                   ),
             Container(
               margin: const EdgeInsets.only(
-                top: 10,
+                top: 20,
+                bottom: 20,
               ),
               width: MediaQuery.of(context).size.width * 0.8,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: client.getColor(ColorName.color1),
-                  elevation: 0,
-                  shape: StadiumBorder(),
-                ),
-                onPressed: () {
-                  setState(() {
-                    resolvePlayerPoints(currentPlayer);
-                  });
-                },
-                child: Text(
-                  client.getTranslation(
-                    TranslationKey.next,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 23,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ),
-            ),
-            firstPlayOfTheGame
-                ? Container()
-                : Container(
-                    margin: const EdgeInsets.only(
-                      top: 10,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: client.getColor(ColorName.color1),
-                        elevation: 0,
-                        shape: StadiumBorder(),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          backToPreviousPlayer();
-                        });
-                      },
-                      child: Text(
-                        client.getTranslation(
-                          TranslationKey.previous,
-                        ),
-                        style: TextStyle(
-                          color: client.getColor(
-                            ColorName.text1,
-                          ),
-                          fontSize: 23,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    ),
-                  ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: (client.game.players.length +
-                          client.game.eliminatedPlayers.length) *
-                      50 +
-                  50,
+              height: min(
+                  (client.game.players.length +
+                              client.game.eliminatedPlayers.length) *
+                          45 +
+                      50,
+                  MediaQuery.of(context).size.height * 0.4),
               child: ListView.builder(
+                padding: const EdgeInsets.all(0),
                 itemCount: client.game.players.length +
                     1 +
                     client.game.eliminatedPlayers.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
+                itemBuilder: (context, index) {
                   List<Player> players = client.game.players.toList();
                   players.add(currentPlayer);
                   players
@@ -438,46 +205,186 @@ class _GamePageState extends State<GamePage> {
                       .sort((a, b) => b.currentScore.compareTo(a.currentScore));
                   players.addAll(eliminatedPlayers);
 
+                  Player player = players[index];
+
                   return Container(
-                    margin: const EdgeInsets.only(
-                      top: 2.5,
-                      bottom: 2.5,
-                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          players[index].name,
-                          style: TextStyle(
-                            color: client.getColor(
-                              ColorName.text1,
+                        Row(
+                          children: [
+                            Text(
+                              "${index + 1}.",
+                              style: TextStyle(
+                                color: index == 0
+                                    ? Colors.yellow
+                                    : index == 1
+                                        ? Colors.grey
+                                        : index == 2
+                                            ? Colors.brown
+                                            : client.getColor(
+                                                ColorName.text1,
+                                              ),
+                                fontSize: 23,
+                                fontWeight: index < 3
+                                    ? FontWeight.w800
+                                    : FontWeight.w300,
+                              ),
                             ),
-                            decoration: client.game.eliminatedPlayers
-                                    .contains(players[index])
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                            fontSize: 23,
-                            fontWeight: FontWeight.w300,
-                          ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              player.name,
+                              style: TextStyle(
+                                color: client.getColor(
+                                  ColorName.text1,
+                                ),
+                                decoration: client.game.eliminatedPlayers
+                                        .contains(player)
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                                decorationColor: client.getColor(
+                                  ColorName.text1,
+                                ),
+                                decorationThickness: 4.0,
+                                fontSize: 23,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            // Failed attempts icon(s)
+                            Container(
+                              margin: const EdgeInsets.only(
+                                left: 10,
+                              ),
+                              child: Row(
+                                children: player.eliminated
+                                    ? []
+                                    : List.generate(
+                                        player.failedAttemps,
+                                        (index) => const Icon(
+                                          Icons.dangerous,
+                                          color: Colors.red,
+                                          size: 20,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          players[index].currentScore.toString(),
-                          style: TextStyle(
-                            color: client.getColor(
-                              ColorName.text1,
+                        Row(
+                          children: [
+                            Text(
+                              player.currentScore.toString(),
+                              style: TextStyle(
+                                color: client.getColor(
+                                  ColorName.text1,
+                                ),
+                                decoration: client.game.eliminatedPlayers
+                                        .contains(player)
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                                decorationColor: client.getColor(
+                                  ColorName.text1,
+                                ),
+                                decorationThickness: 4.0,
+                                fontSize: 23,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                            decoration: client.game.eliminatedPlayers
-                                    .contains(players[index])
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                            fontSize: 23,
-                            fontWeight: FontWeight.w300,
-                          ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            IconButton(
+                              onPressed: player.eliminated
+                                  ? null
+                                  : () {
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            EditPoints(
+                                          client: client,
+                                          currentPlayer: player,
+                                          validatePoints:
+                                              (pointsHistory, changedRows) {
+                                            for (int i = changedRows;
+                                                i > 0;
+                                                i--) {
+                                              player.currentScore -= player
+                                                      .pointsHistory[
+                                                  player.pointsHistory.length -
+                                                      i];
+
+                                              if (player.currentScore < 0) {
+                                                player.currentScore = 0;
+                                              }
+                                            }
+
+                                            player.pointsHistory.removeRange(
+                                                player.pointsHistory.length -
+                                                    changedRows,
+                                                player.pointsHistory.length);
+
+                                            for (int i = changedRows;
+                                                i > 0;
+                                                i--) {
+                                              bool isGameFinished =
+                                                  resolvePoints(
+                                                      player,
+                                                      pointsHistory[
+                                                          pointsHistory.length -
+                                                              i]);
+
+                                              if (isGameFinished) {
+                                                client.game.players
+                                                    .add(currentPlayer);
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          EndPage(
+                                                        client: client,
+                                                      ),
+                                                    ),
+                                                    (route) => false);
+                                              }
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    },
+                              icon: Icon(
+                                Icons.edit,
+                                color: player.eliminated
+                                    ? client.getColor(
+                                        ColorName.text2,
+                                      )
+                                    : client.getColor(
+                                        ColorName.text1,
+                                      ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   );
                 },
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 20,
+              ),
+              child: Button(
+                text: client.translate("game.next"),
+                onPressed: () {
+                  setState(() {
+                    resolvePlayerPoints(currentPlayer);
+                  });
+                },
+                client: client,
               ),
             ),
           ],
@@ -487,26 +394,17 @@ class _GamePageState extends State<GamePage> {
   }
 
   void resolvePlayerPoints(Player player) {
-    if (client.game.gameSettings.cosyMode) {
-      resolveCosyMode(player);
-      resolvePlay(player);
-    } else {
-      resolvePlay(player);
+    if (client.game.gameSettings.cosyType) {
+      resolveCosyType(player);
     }
 
-    firstPlayOfTheGame = false;
-  }
+    bool gameFinished = resolvePoints(player, playerPoints);
 
-  void resolvePlay(Player player) {
-    int currentScore = player.currentScore;
+    if (gameFinished) {
+      if (!player.eliminated) {
+        client.game.players.add(player);
+      }
 
-    if (currentScore + playerPoints == 50) {
-      currentScore = 50;
-      player.hasWin = true;
-      player.failedAttemps = 0;
-      player.currentScore = currentScore;
-      player.pointsHistory.add(currentScore);
-      client.game.players.add(player);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -515,60 +413,63 @@ class _GamePageState extends State<GamePage> {
             ),
           ),
           (route) => false);
-      return;
-    } else if (currentScore + playerPoints > 50) {
-      currentScore = 25;
-      player.failedAttemps = 0;
-    } else if (playerPoints != 0) {
-      currentScore += playerPoints;
-      player.failedAttemps = 0;
     } else {
-      player.failedAttemps++;
-      if (player.failedAttemps == 3 &&
-          client.game.gameSettings.whenThreeFailInRow !=
-              ThreeFailAction.nothing) {
-        if (client.game.gameSettings.whenThreeFailInRow ==
-            ThreeFailAction.resetPoints) {
-          player.failedAttemps = 0;
-
-          currentScore = 0;
-          playerPoints = 0;
-        } else {
-          player.pointsHistory.add(currentScore);
-          client.game.eliminatedPlayers.add(player);
-
-          currentPlayer = client.game.players.removeFirst();
-          controller.text = "0";
-          playerPoints = 0;
-
-          if (client.game.players.isEmpty) {
-            client.game.players.add(currentPlayer);
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => EndPage(
-                    client: client,
-                  ),
-                ),
-                (route) => false);
-            return;
-          }
-
-          return;
-        }
+      if (!player.eliminated) {
+        client.game.players.add(player);
       }
+
+      currentPlayer = client.game.players.removeFirst();
+      controller.text = "0";
+      playerPoints = 0;
     }
-
-    player.currentScore = currentScore;
-    player.pointsHistory.add(currentScore);
-    client.game.players.add(player);
-
-    currentPlayer = client.game.players.removeFirst();
-    controller.text = "0";
-    playerPoints = 0;
   }
 
-  void resolveCosyMode(Player player) {
+  /// Resolve the player points (return true if the game is finished)
+  bool resolvePoints(Player player, int scoreToAdd) {
+    if (scoreToAdd != 0) {
+      player.failedAttemps = 0;
+    }
+
+    bool gameFinished = false;
+    player.pointsHistory.add(scoreToAdd);
+
+    if (scoreToAdd + player.currentScore == 50) {
+      player.hasWon = true;
+      player.currentScore = 50;
+
+      gameFinished = true;
+    } else if (scoreToAdd + player.currentScore > 50) {
+      player.currentScore = 25;
+    } else if (scoreToAdd == 0 &&
+        client.game.gameSettings.whenThreeFailInRow !=
+            ThreeFailAction.nothing) {
+      player.failedAttemps++;
+
+      if (player.failedAttemps == 3) {
+        player.failedAttemps = 0;
+
+        if (client.game.gameSettings.whenThreeFailInRow ==
+            ThreeFailAction.resetPoints) {
+          player.currentScore = 0;
+        } else {
+          player.eliminated = true;
+          client.game.eliminatedPlayers.add(player);
+
+          if (client.game.players.length <= 1) {
+            gameFinished = true;
+          }
+        }
+      }
+    } else {
+      player.currentScore += scoreToAdd;
+    }
+
+    setState(() {});
+
+    return gameFinished;
+  }
+
+  void resolveCosyType(Player player) {
     int sum = 0;
     for (int element in selectedPins) {
       sum += element;
@@ -580,48 +481,8 @@ class _GamePageState extends State<GamePage> {
       playerPoints = sum;
     }
 
-    selectedPins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  }
-
-  void backToPreviousPlayer() {
-    if (client.game.players.isEmpty) {
-      return;
-    }
-
-    client.game.players.addFirst(currentPlayer);
-
-    Player player = client.game.players.removeLast();
-
-    int lastScore;
-
-    if (player.pointsHistory.isEmpty) {
-      lastScore = 0;
-      player.currentScore = 0;
-    } else {
-      lastScore = player.pointsHistory.last;
-      player.currentScore -= lastScore;
-      player.pointsHistory.removeLast();
-    }
-
-    currentPlayer = player;
-    controller.text = lastScore.toString();
-    playerPoints = lastScore;
-
-    firstPlayOfTheGame = player.pointsHistory.isEmpty;
-
-    if (!firstPlayOfTheGame) {
-      return;
-    }
-
-    for (Player player in client.game.players) {
-      if (player.pointsHistory.isNotEmpty) {
-        firstPlayOfTheGame = false;
-        break;
-      }
-    }
-
     setState(() {
-      // Force the state to reload
+      selectedPins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     });
   }
 }

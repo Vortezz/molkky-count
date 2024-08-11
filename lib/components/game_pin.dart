@@ -27,14 +27,14 @@ class GamePin extends StatelessWidget {
         child: Container(
           color: selectedPins[number - 1] == 0
               ? client.getColor(ColorName.background)
-              : client.getColor(ColorName.color1),
+              : client.getColor(ColorName.button),
           child: IconButton(
             splashRadius: 0.001,
             onPressed: () {
               selectedPins[number - 1] =
                   (selectedPins[number - 1] == 0 ? 1 : 0);
               client.reloadState();
-            },
+              },
             icon: Text(
               number.toString(),
               style: TextStyle(

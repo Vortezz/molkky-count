@@ -6,9 +6,11 @@ class LightColors {
     ColorName.background: Colors.white,
     ColorName.text1: const Color(0xff292727),
     ColorName.text2: const Color(0xffDED1D1),
-    ColorName.color1: const Color(0xff8B5CF6),
+    ColorName.button: const Color(0xFF517dff),
     ColorName.color2: const Color(0xffEC2C44),
     ColorName.color3: const Color(0xffFFB82B),
+    ColorName.white: Colors.white,
+    ColorName.black: Colors.black,
   };
 
   Color? getColorFromName(ColorName colorName) {

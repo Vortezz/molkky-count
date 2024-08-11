@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'MolkkyCount',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: "OpenSans",
       ),
       home: HomePage(
         client: Client(),
