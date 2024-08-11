@@ -34,9 +34,7 @@ class GamePin extends StatelessWidget {
               selectedPins[number - 1] =
                   (selectedPins[number - 1] == 0 ? 1 : 0);
               client.reloadState();
-
-              print(selectedPins);
-            },
+              },
             icon: Text(
               number.toString(),
               style: TextStyle(

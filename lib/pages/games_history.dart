@@ -1,11 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/games_history.dart';
+import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/pages/home.dart';
-import 'package:molkkycount/translations/translations_key.dart';
+import 'package:molkkycount/enums/team_status.dart';
 
 class GamesHistoryPage extends StatefulWidget {
   const GamesHistoryPage({Key? key, required this.client}) : super(key: key);
@@ -20,7 +22,8 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
   late Client client;
   late List<MapEntry<int, GameHistory>> games;
 
-  int currentGame = 0;
+  int currentGameId = 0;
+  GameHistory currentGame = GameHistory({}, {});
 
   @override
   void initState() {
@@ -32,7 +35,8 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
 
     setState(() {
       if (games.isNotEmpty) {
-        currentGame = games.length - 1;
+        currentGameId = games.length - 1;
+        currentGame = games[currentGameId].value;
       }
     });
   }
@@ -53,176 +57,188 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
             ColorName.text1,
           ),
         ),
-        title: IconButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => HomePage(
-                  client: client,
-                ),
-              ),
-              (route) => false,
-            );
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-          splashRadius: 20,
-        ),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              client.getTranslation(
-                TranslationKey.gameHistory,
-              ),
-              style: TextStyle(
-                color: client.getColor(
-                  ColorName.text1,
-                ),
-                fontSize: 32,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            games.isEmpty
-                ? Container()
-                : Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        IconButton(
-                          onPressed: currentGame == 0
-                              ? null
-                              : () {
-                                  setState(() {
-                                    currentGame--;
-                                  });
-                                },
-                          splashRadius: 20,
-                          icon: Icon(
-                            Icons.arrow_back,
-                            color: currentGame != 0
-                                ? client.getColor(
-                                    ColorName.text1,
-                                  )
-                                : client.getColor(
-                                    ColorName.background,
-                                  ),
-                          ),
-                        ),
-                        Text(
-                          SchedulerBinding.instance.window.alwaysUse24HourFormat
-                              ? DateFormat().add_yMd().add_Hm().format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                      games[currentGame].key,
-                                    ),
-                                  )
-                              : DateFormat().add_yMd().add_jm().format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                      games[currentGame].key,
-                                    ),
-                                  ),
-                          style: TextStyle(
-                            color: client.getColor(
-                              ColorName.text1,
-                            ),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: currentGame < games.length - 1
-                              ? () {
-                                  setState(() {
-                                    currentGame++;
-                                  });
-                                }
-                              : null,
-                          splashRadius: 20,
-                          icon: Icon(
-                            Icons.arrow_forward,
-                            color: currentGame < games.length - 1
-                                ? client.getColor(
-                                    ColorName.text1,
-                                  )
-                                : client.getColor(
-                                    ColorName.background,
-                                  ),
-                          ),
-                        ),
-                      ],
+            Column(
+              children: [
+                Text(
+                  client.translate("games_history.title"),
+                  style: TextStyle(
+                    color: client.getColor(
+                      ColorName.text1,
                     ),
+                    fontSize: 32,
+                    fontWeight: FontWeight.w800,
                   ),
+                ),
+                games.isEmpty
+                    ? Container()
+                    : Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            IconButton(
+                              onPressed: currentGameId == 0
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        currentGameId--;
+                                        currentGame =
+                                            games[currentGameId].value;
+                                      });
+                                    },
+                              splashRadius: 20,
+                              icon: Icon(
+                                Icons.arrow_back,
+                                color: currentGameId != 0
+                                    ? client.getColor(
+                                        ColorName.text1,
+                                      )
+                                    : client.getColor(
+                                        ColorName.background,
+                                      ),
+                              ),
+                            ),
+                            Text(
+                              SchedulerBinding
+                                      .instance.window.alwaysUse24HourFormat
+                                  ? DateFormat().addPattern("d/M/y H:m").format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                          games[currentGameId].key,
+                                        ),
+                                      )
+                                  : DateFormat().add_yMd().add_jm().format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                          games[currentGameId].key,
+                                        ),
+                                      ),
+                              style: TextStyle(
+                                color: client.getColor(
+                                  ColorName.text1,
+                                ),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w300,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: currentGameId < games.length - 1
+                                  ? () {
+                                      setState(() {
+                                        currentGameId++;
+                                        currentGame =
+                                            games[currentGameId].value;
+                                      });
+                                    }
+                                  : null,
+                              splashRadius: 20,
+                              icon: Icon(
+                                Icons.arrow_forward,
+                                color: currentGameId < games.length - 1
+                                    ? client.getColor(
+                                        ColorName.text1,
+                                      )
+                                    : client.getColor(
+                                        ColorName.background,
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ],
+            ),
             games.isEmpty
                 ? Container()
                 : Container(
                     margin: const EdgeInsets.only(
                       top: 20,
+                      bottom: 20,
                     ),
                     width: MediaQuery.of(context).size.width * 0.8,
+                    height: min(
+                        (currentGame.scores.length +
+                                currentGame.eliminatedPlayers.length) *
+                            45,
+                        MediaQuery.of(context).size.height * 0.5),
                     child: ListView.builder(
-                      itemExtent: 27,
-                      shrinkWrap: true,
-                      itemCount: games[currentGame].value.scores.length,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        List<MapEntry<String, int>> players =
-                            games[currentGame].value.scores.entries.toList();
+                      padding: const EdgeInsets.all(0),
+                      itemCount: currentGame.scores.length +
+                          currentGame.eliminatedPlayers.length,
+                      itemBuilder: (context, index) {
+                        List<Player> players = currentGame.scores.entries
+                            .map(
+                              (e) => Player(
+                                name: e.key,
+                                teamStatus: TeamStatus.solo,
+                              ),
+                            )
+                            .toList();
+                        players.sort(
+                            (a, b) => b.currentScore.compareTo(a.currentScore));
+                        List<Player> eliminatedPlayers =
+                            currentGame.eliminatedPlayers.entries
+                                .map(
+                                  (e) => Player(
+                                    name: e.key,
+                                    teamStatus: TeamStatus.solo,
+                                  ),
+                                )
+                                .toList();
+                        eliminatedPlayers.sort(
+                            (a, b) => b.currentScore.compareTo(a.currentScore));
+                        players.addAll(eliminatedPlayers);
 
-                        players.sort((a, b) => b.value.compareTo(a.value));
+                        Player player = players[index];
 
                         return Container(
                           margin: const EdgeInsets.only(
-                            top: 2.5,
-                            bottom: 2.5,
+                            bottom: 10,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
                                 children: [
-                                  index == 0
-                                      ? Container(
-                                          margin: const EdgeInsets.only(
-                                            right: 10,
-                                          ),
-                                          child: const Icon(
-                                            Icons.workspace_premium,
-                                            color: Colors.yellow,
-                                          ),
-                                        )
-                                      : index == 1
-                                          ? Container(
-                                              margin: const EdgeInsets.only(
-                                                right: 10,
-                                              ),
-                                              child: const Icon(
-                                                Icons.workspace_premium,
-                                                color: Colors.grey,
-                                              ),
-                                            )
-                                          : index == 2
-                                              ? Container(
-                                                  margin: const EdgeInsets.only(
-                                                    right: 10,
-                                                  ),
-                                                  child: const Icon(
-                                                    Icons.workspace_premium,
-                                                    color: Color(0xFFcd7f32),
-                                                  ),
-                                                )
-                                              : Container(),
                                   Text(
-                                    players[index].key,
+                                    "${index + 1}.",
+                                    style: TextStyle(
+                                      color: index == 0
+                                          ? Colors.yellow
+                                          : index == 1
+                                              ? Colors.grey
+                                              : index == 2
+                                                  ? Colors.brown
+                                                  : client.getColor(
+                                                      ColorName.text1,
+                                                    ),
+                                      fontSize: 23,
+                                      fontWeight: index < 3
+                                          ? FontWeight.w800
+                                          : FontWeight.w300,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    player.name,
                                     style: TextStyle(
                                       color: client.getColor(
                                         ColorName.text1,
                                       ),
+                                      decoration:
+                                          eliminatedPlayers.contains(player)
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
+                                      decorationColor: client.getColor(
+                                        ColorName.text1,
+                                      ),
+                                      decorationThickness: 4.0,
                                       fontSize: 23,
                                       fontWeight: FontWeight.w300,
                                     ),
@@ -230,11 +246,18 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                                 ],
                               ),
                               Text(
-                                players[index].value.toString(),
+                                player.currentScore.toString(),
                                 style: TextStyle(
                                   color: client.getColor(
                                     ColorName.text1,
                                   ),
+                                  decoration: eliminatedPlayers.contains(player)
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
+                                  decorationColor: client.getColor(
+                                    ColorName.text1,
+                                  ),
+                                  decorationThickness: 4.0,
                                   fontSize: 23,
                                   fontWeight: FontWeight.w300,
                                 ),
@@ -245,88 +268,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                       },
                     ),
                   ),
-            games.isEmpty
-                ? Container()
-                : games[currentGame].value.eliminatedPlayers.isNotEmpty
-                    ? Column(
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            margin: EdgeInsets.only(
-                              top: 24,
-                              bottom: 20,
-                            ),
-                            child: Text(
-                              client.getTranslation(
-                                  TranslationKey.eliminatedPlayers),
-                              style: TextStyle(
-                                color: client.getColor(
-                                  ColorName.color2,
-                                ),
-                                fontSize: 23,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: ListView.builder(
-                              itemExtent: 27,
-                              shrinkWrap: true,
-                              itemCount: games[currentGame]
-                                  .value
-                                  .eliminatedPlayers
-                                  .length,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (BuildContext context, int index) {
-                                List<MapEntry<String, int>> players =
-                                    games[currentGame]
-                                        .value
-                                        .eliminatedPlayers
-                                        .entries
-                                        .toList();
-
-                                players
-                                    .sort((a, b) => b.value.compareTo(a.value));
-
-                                return Container(
-                                  margin: const EdgeInsets.only(
-                                    top: 2.5,
-                                    bottom: 2.5,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        players[index].key,
-                                        style: TextStyle(
-                                          color: client.getColor(
-                                            ColorName.color2,
-                                          ),
-                                          fontSize: 23,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                      Text(
-                                        players[index].value.toString(),
-                                        style: TextStyle(
-                                          color: client.getColor(
-                                            ColorName.color2,
-                                          ),
-                                          fontSize: 23,
-                                          fontWeight: FontWeight.w300,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      )
-                    : Container(),
+            Container(),
           ],
         ),
       ),

@@ -60,8 +60,6 @@ class GamesHistory {
 
     jsonString += "}";
 
-    print(jsonString);
-
     client.writeHistory(jsonString);
   }
 }

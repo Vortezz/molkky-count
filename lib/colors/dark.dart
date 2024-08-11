@@ -9,6 +9,7 @@ class DarkColors {
     ColorName.button: const Color(0xFF517dff),
     ColorName.color2: const Color(0xffEC2C44),
     ColorName.color3: const Color(0xffFFB82B),
+    ColorName.white: Colors.white,
   };
 
   Color? getColorFromName(ColorName colorName) {

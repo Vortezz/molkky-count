@@ -42,8 +42,10 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
         backgroundColor: client.getColor(
           ColorName.background,
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
         ),
         elevation: 0,
       ),
@@ -83,11 +85,17 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                     TextField(
                       controller: _controller,
                       decoration: InputDecoration(
-                        fillColor: Colors.white,
+                        fillColor: client.getColor(
+                          ColorName.text2,
+                        ),
                         filled: true,
                         hintText: client.translate("add_player.hint"),
                         hintStyle: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
+                          color: client
+                              .getColor(
+                                ColorName.text1,
+                              )
+                              ?.withOpacity(0.5),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -96,8 +104,10 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                         contentPadding: const EdgeInsets.only(
                             left: 15, right: 15, top: 10, bottom: 10),
                       ),
-                      style: const TextStyle(
-                        color: Colors.black,
+                      style: TextStyle(
+                        color: client.getColor(
+                          ColorName.text1,
+                        ),
                         fontSize: 20,
                       ),
                       onChanged: (value) {
@@ -114,7 +124,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: CustomText(
-                          text: client.translate("add_player.gender"),
+                          text: client.translate("add_player.team_type"),
                           client: client,
                           textType: TextType.emphasis,
                           color: ColorName.text1,
@@ -151,14 +161,28 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                   onPressed: () {
                     FocusManager.instance.primaryFocus?.unfocus();
 
-                    widget.onAddPlayer(
+                    bool success = widget.onAddPlayer(
                       Player(
                         name: _controller.text,
                         teamStatus: teamStatus,
                       ),
                     );
 
-                    Navigator.pop(context);
+                    if (success) {
+                      Navigator.pop(context);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: CustomText(
+                            text: client.translate("add_player.already_exists"),
+                            client: client,
+                            textType: TextType.subtitle,
+                            color: ColorName.text1,
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                   isDisabled: _controller.text.isEmpty,
                 ),

@@ -44,7 +44,7 @@ class Button extends StatelessWidget {
           client: client,
           text: text,
           textType: TextType.button,
-          color: isColored ? ColorName.text1 : ColorName.background,
+          color: isColored ? ColorName.white : ColorName.background,
         ),
       ),
     );

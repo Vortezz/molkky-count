@@ -8,9 +8,9 @@ class Player {
 
   final String name;
   final TeamStatus teamStatus;
-  final List<int> pointsHistory = [];
+  List<int> pointsHistory = [];
 
-  bool hasWin = false;
+  bool hasWon = false;
   bool eliminated = false;
   int currentScore = 0;
   int failedAttemps = 0;

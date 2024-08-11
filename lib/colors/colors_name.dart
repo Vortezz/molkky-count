@@ -5,4 +5,5 @@ enum ColorName {
   button,
   color2,
   color3,
+  white,
 }

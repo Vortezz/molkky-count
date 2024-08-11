@@ -3,7 +3,9 @@ import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/components/button.dart';
 import 'package:molkkycount/components/text.dart';
+import 'package:molkkycount/pages/games_history.dart';
 import 'package:molkkycount/pages/player_selection.dart';
+import 'package:molkkycount/pages/settings.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.client}) : super(key: key);
@@ -43,6 +45,52 @@ class _MyHomePageState extends State<HomePage> {
             ColorName.text1,
           ),
         ),
+        title: client.getHistory().games.isEmpty
+            ? null
+            : Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.timer_outlined,
+                      color: client.getColor(
+                        ColorName.text1,
+                      ),
+                    ),
+                    tooltip: client.translate("games_history.title"),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => GamesHistoryPage(
+                            client: client,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+              color: client.getColor(
+                ColorName.text1,
+              ),
+            ),
+            tooltip: client.translate("settings.title"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => SettingsPage(
+                    client: client,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
         backgroundColor: client.getColor(
           ColorName.background,
         ),
@@ -72,11 +120,14 @@ class _MyHomePageState extends State<HomePage> {
                   textType: TextType.title,
                   color: ColorName.text1,
                 ),
-                CustomText(
-                  text: client.translate("home.description"),
-                  client: client,
-                  textType: TextType.text,
-                  color: ColorName.text1,
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomText(
+                    text: client.translate("home.description"),
+                    client: client,
+                    textType: TextType.text,
+                    color: ColorName.text1,
+                  ),
                 ),
               ],
             ),

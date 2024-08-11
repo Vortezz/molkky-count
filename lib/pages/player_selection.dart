@@ -42,8 +42,10 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
         backgroundColor: client.getColor(
           ColorName.background,
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
         ),
         elevation: 0,
       ),
@@ -141,9 +143,11 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                                         players.removeAt(index);
                                       });
                                     },
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.close_rounded,
-                                      color: Colors.white,
+                                      color: client.getColor(
+                                        ColorName.text1,
+                                      ),
                                       size: 32,
                                     ),
                                   ),
@@ -170,6 +174,12 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                               builder: (context) => AddPlayerPage(
                                 client: client,
                                 onAddPlayer: (Player player) {
+                                  if (players
+                                      .map((e) => e.name)
+                                      .contains(player.name)) {
+                                    return false;
+                                  }
+
                                   setState(() {
                                     players.add(player);
                                   });
@@ -184,6 +194,8 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                                       curve: Curves.ease,
                                     );
                                   }
+
+                                  return true;
                                 },
                               ),
                             ),

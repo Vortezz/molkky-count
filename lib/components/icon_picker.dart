@@ -52,7 +52,9 @@ class IconPicker extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: value == index ? Colors.white : Colors.transparent,
+                    color: value == index
+                        ? client.getColor(ColorName.text1)
+                        : Colors.transparent,
                   ),
                   padding: const EdgeInsets.all(10),
                   child: Text(

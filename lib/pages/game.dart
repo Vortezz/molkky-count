@@ -7,9 +7,11 @@ import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/components/button.dart';
 import 'package:molkkycount/components/compact_game.dart';
 import 'package:molkkycount/components/cosy_game.dart';
+import 'package:molkkycount/components/edit_points.dart';
 import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/enums/three_fail_action.dart';
 import 'package:molkkycount/pages/end.dart';
+import 'package:molkkycount/pages/home.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({Key? key, required this.client}) : super(key: key);
@@ -26,8 +28,6 @@ class _GamePageState extends State<GamePage> {
   late Player currentPlayer;
   int playerPoints = 0;
 
-  late bool firstPlayOfTheGame;
-
   List<int> selectedPins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   TextEditingController controller = TextEditingController();
@@ -40,7 +40,6 @@ class _GamePageState extends State<GamePage> {
     client.on("reloadState", (state) {
       setState(() {});
     });
-    firstPlayOfTheGame = true;
     super.initState();
   }
 
@@ -54,8 +53,71 @@ class _GamePageState extends State<GamePage> {
         backgroundColor: client.getColor(
           ColorName.background,
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
+        leading: IconButton(
+          color: client.getColor(
+            ColorName.text1,
+          ),
+          onPressed: () {
+            showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: CustomText(
+                  client: client,
+                  text: client.translate(
+                    "game.quit.title",
+                  ),
+                  textType: TextType.subtitle,
+                ),
+                content: CustomText(
+                  client: client,
+                  text: client.translate(
+                    "game.quit.content",
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: CustomText(
+                      client: client,
+                      text: client.translate(
+                        "game.quit.cancel",
+                      ),
+                      textType: TextType.emphasis,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage(
+                            client: client,
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: CustomText(
+                      client: client,
+                      text: client.translate(
+                        "game.quit.leave",
+                      ),
+                      color: ColorName.color2,
+                      textType: TextType.emphasis,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.close,
+          ),
+        ),
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
         ),
         elevation: 0,
       ),
@@ -82,18 +144,35 @@ class _GamePageState extends State<GamePage> {
                     client: client,
                     selectedPins: selectedPins,
                   )
-                : CompactGameComponent(
-                    client: client,
-                    setPlayerPoints: (points) {
-                      print("Points: $points");
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                          bottom: 10,
+                        ),
+                        child: CustomText(
+                          client: client,
+                          text: client.translate("game.enter_score"),
+                          textType: TextType.text,
+                          color: ColorName.text1,
+                        ),
+                      ),
+                      CompactGameComponent(
+                        client: client,
+                        setPlayerPoints: (points, next) {
+                          setState(() {
+                            playerPoints = points;
 
-                      setState(() {
-                        playerPoints = points;
-
-                        print("Player points: $playerPoints");
-                      });
-                    },
-                    playerPoints: playerPoints,
+                            if (next) {
+                              resolvePlayerPoints(currentPlayer);
+                            }
+                          });
+                        },
+                        playerPoints: playerPoints,
+                      ),
+                    ],
                   ),
             Container(
               margin: const EdgeInsets.only(
@@ -217,7 +296,60 @@ class _GamePageState extends State<GamePage> {
                               onPressed: player.eliminated
                                   ? null
                                   : () {
-                                      // TODO: Implement edit player score
+                                      showDialog<String>(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            EditPoints(
+                                          client: client,
+                                          currentPlayer: player,
+                                          validatePoints:
+                                              (pointsHistory, changedRows) {
+                                            for (int i = changedRows;
+                                                i > 0;
+                                                i--) {
+                                              player.currentScore -= player
+                                                      .pointsHistory[
+                                                  player.pointsHistory.length -
+                                                      i];
+
+                                              if (player.currentScore < 0) {
+                                                player.currentScore = 0;
+                                              }
+                                            }
+
+                                            player.pointsHistory.removeRange(
+                                                player.pointsHistory.length -
+                                                    changedRows,
+                                                player.pointsHistory.length);
+
+                                            for (int i = changedRows;
+                                                i > 0;
+                                                i--) {
+                                              bool isGameFinished =
+                                                  resolvePoints(
+                                                      player,
+                                                      pointsHistory[
+                                                          pointsHistory.length -
+                                                              i]);
+
+                                              if (isGameFinished) {
+                                                client.game.players
+                                                    .add(currentPlayer);
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (BuildContext
+                                                              context) =>
+                                                          EndPage(
+                                                        client: client,
+                                                      ),
+                                                    ),
+                                                    (route) => false);
+                                              }
+                                            }
+                                          },
+                                        ),
+                                      );
                                     },
                               icon: Icon(
                                 Icons.edit,
@@ -261,24 +393,15 @@ class _GamePageState extends State<GamePage> {
   void resolvePlayerPoints(Player player) {
     if (client.game.gameSettings.cosyType) {
       resolveCosyType(player);
-      resolvePlay(player);
-    } else {
-      resolvePlay(player);
     }
 
-    firstPlayOfTheGame = false;
-  }
+    bool gameFinished = resolvePoints(player, playerPoints);
 
-  void resolvePlay(Player player) {
-    int currentScore = player.currentScore;
+    if (gameFinished) {
+      if (!player.eliminated) {
+        client.game.players.add(player);
+      }
 
-    if (currentScore + playerPoints == 50) {
-      currentScore = 50;
-      player.hasWin = true;
-      player.failedAttemps = 0;
-      player.currentScore = currentScore;
-      player.pointsHistory.add(currentScore);
-      client.game.players.add(player);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -287,58 +410,60 @@ class _GamePageState extends State<GamePage> {
             ),
           ),
           (route) => false);
-      return;
-    } else if (currentScore + playerPoints > 50) {
-      currentScore = 25;
-      player.failedAttemps = 0;
-    } else if (playerPoints != 0) {
-      currentScore += playerPoints;
-      player.failedAttemps = 0;
     } else {
+      if (!player.eliminated) {
+        client.game.players.add(player);
+      }
+
+      currentPlayer = client.game.players.removeFirst();
+      controller.text = "0";
+      playerPoints = 0;
+    }
+  }
+
+  /// Resolve the player points (return true if the game is finished)
+  bool resolvePoints(Player player, int scoreToAdd) {
+    if (scoreToAdd != 0) {
+      player.failedAttemps = 0;
+    }
+
+    bool gameFinished = false;
+    player.pointsHistory.add(scoreToAdd);
+
+    if (scoreToAdd + player.currentScore == 50) {
+      player.hasWon = true;
+      player.currentScore = 50;
+
+      gameFinished = true;
+    } else if (scoreToAdd + player.currentScore > 50) {
+      player.currentScore = 25;
+    } else if (scoreToAdd == 0 &&
+        client.game.gameSettings.whenThreeFailInRow !=
+            ThreeFailAction.nothing) {
       player.failedAttemps++;
-      if (player.failedAttemps == 3 &&
-          client.game.gameSettings.whenThreeFailInRow !=
-              ThreeFailAction.nothing) {
+
+      if (player.failedAttemps == 3) {
+        player.failedAttemps = 0;
+
         if (client.game.gameSettings.whenThreeFailInRow ==
             ThreeFailAction.resetPoints) {
-          player.failedAttemps = 0;
-
-          currentScore = 0;
-          playerPoints = 0;
+          player.currentScore = 0;
         } else {
-          player.pointsHistory.add(currentScore);
           player.eliminated = true;
           client.game.eliminatedPlayers.add(player);
 
-          currentPlayer = client.game.players.removeFirst();
-          controller.text = "0";
-          playerPoints = 0;
-
-          if (client.game.players.isEmpty) {
-            client.game.players.add(currentPlayer);
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => EndPage(
-                    client: client,
-                  ),
-                ),
-                (route) => false);
-            return;
+          if (client.game.players.length <= 1) {
+            gameFinished = true;
           }
-
-          return;
         }
       }
+    } else {
+      player.currentScore += scoreToAdd;
     }
 
-    player.currentScore = currentScore;
-    player.pointsHistory.add(currentScore);
-    client.game.players.add(player);
+    setState(() {});
 
-    currentPlayer = client.game.players.removeFirst();
-    controller.text = "0";
-    playerPoints = 0;
+    return gameFinished;
   }
 
   void resolveCosyType(Player player) {
@@ -352,8 +477,6 @@ class _GamePageState extends State<GamePage> {
     } else if (sum > 1) {
       playerPoints = sum;
     }
-
-    print(selectedPins);
 
     setState(() {
       selectedPins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

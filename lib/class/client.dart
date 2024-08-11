@@ -15,6 +15,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Client with EventEmitter {
   Client() {
+    _gamesHistory = GamesHistory(
+      "{}",
+      this,
+    );
+
     init();
   }
 
@@ -51,8 +56,6 @@ class Client with EventEmitter {
       }
 
       translations[lang] = translation;
-
-      print("Loaded $lang translations (${translations[lang]!.length} keys)");
     }
 
     preferences = await SharedPreferences.getInstance();
@@ -171,6 +174,10 @@ class Client with EventEmitter {
 
   void reloadState() {
     emit("reloadState");
+  }
+
+  void reloadSettings() {
+    emit("reloadSettings");
   }
 
   String _getLanguage() {

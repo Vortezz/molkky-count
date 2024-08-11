@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/colors/theme.dart';
+import 'package:molkkycount/components/button.dart';
+import 'package:molkkycount/components/icon_picker.dart';
+import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/enums/language.dart';
-import 'package:molkkycount/pages/home.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key, required this.client}) : super(key: key);
+  const SettingsPage({super.key, required this.client});
 
   final Client client;
 
@@ -17,9 +19,17 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   late Client client;
 
+  AppTheme theme = AppTheme.system;
+  Language language = Language.system;
+
   @override
   void initState() {
     client = widget.client;
+    setState(() {
+      language = client.getLanguage();
+      theme = client.getTheme();
+    });
+
     super.initState();
   }
 
@@ -39,182 +49,137 @@ class _SettingsPageState extends State<SettingsPage> {
             ColorName.text1,
           ),
         ),
-        title: IconButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => HomePage(
-                  client: client,
-                ),
-              ),
-              (route) => false,
-            );
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
-          splashRadius: 20,
-        ),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              client.getTranslation(
-                TranslationKey.settings,
-              ),
-              style: TextStyle(
-                color: client.getColor(
-                  ColorName.text1,
-                ),
-                fontSize: 32,
-                fontWeight: FontWeight.w800,
+            CustomText(
+              text: client.translate("settings.title"),
+              client: client,
+              textType: TextType.title,
+              color: ColorName.text1,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Column(
+                children: [
+                  Container(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: CustomText(
+                        text: client.translate("settings.theme"),
+                        client: client,
+                        textType: TextType.emphasis,
+                        color: ColorName.text1,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 10,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: CustomText(
+                        text: client.translate("settings.theme.description"),
+                        client: client,
+                        textType: TextType.text,
+                        color: ColorName.text1,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                  IconPicker(
+                    client: client,
+                    data: [
+                      IconPickerData(
+                        icon: "🌙",
+                        text: client.translate("theme.dark"),
+                      ),
+                      IconPickerData(
+                          icon: "☀️", text: client.translate("theme.light")),
+                      IconPickerData(
+                          icon: "⚙️",
+                          text: client.translate("settings.system")),
+                    ],
+                    onPressed: (index) {
+                      setState(() {
+                        theme = AppTheme.values[index];
+                      });
+                    },
+                    value: theme.index,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      top: 30,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: CustomText(
+                        text: client.translate("settings.language"),
+                        client: client,
+                        textType: TextType.emphasis,
+                        color: ColorName.text1,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 10,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: CustomText(
+                        text: client.translate("settings.language.description"),
+                        client: client,
+                        textType: TextType.text,
+                        color: ColorName.text1,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ),
+                  IconPicker(
+                    client: client,
+                    data: [
+                      IconPickerData(
+                        icon: "🇬🇧",
+                        text: client.translate("language.english"),
+                      ),
+                      IconPickerData(
+                        icon: "🇫🇷",
+                        text: client.translate("language.french"),
+                      ),
+                      IconPickerData(
+                        icon: "⚙️",
+                        text: client.translate("settings.system"),
+                      ),
+                    ],
+                    onPressed: (index) {
+                      setState(() {
+                        language = Language.values[index];
+                      });
+                    },
+                    value: language.index,
+                  ),
+                ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  client.getTranslation(
-                    TranslationKey.language,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: client.getLanguage().value != 0
-                      ? () {
-                          setState(() {
-                            client.setLanguage(Language.getPrevious(
-                              client.getLanguage(),
-                            ));
-                          });
-                        }
-                      : () {
-                          setState(() {
-                            client.setLanguage(Language.system);
-                          });
-                        },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: client.getColor(ColorName.text1),
-                  ),
-                ),
-                Text(
-                  client.getLanguage().value == 0
-                      ? "English"
-                      : client.getLanguage().value == 1
-                          ? "Français"
-                          : client.getTranslation(
-                              TranslationKey.system,
-                            ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: client.getLanguage().value != 2
-                      ? () {
-                          setState(() {
-                            client.setLanguage(Language.getNext(
-                              client.getLanguage(),
-                            ));
-                          });
-                        }
-                      : () {
-                          setState(() {
-                            client.setLanguage(Language.en);
-                          });
-                        },
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    color: client.getColor(ColorName.text1),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  client.getTranslation(
-                    TranslationKey.theme,
-                  ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: client.getTheme().value != 0
-                      ? () {
-                          setState(() {
-                            client.setAppTheme(AppTheme.getPrevious(
-                              client.getTheme(),
-                            ));
-                          });
-                        }
-                      : () {
-                          setState(() {
-                            client.setAppTheme(AppTheme.system);
-                          });
-                        },
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: client.getColor(ColorName.text1),
-                  ),
-                ),
-                Text(
-                  client.getTheme().value == 0
-                      ? client.getTranslation(TranslationKey.darkTheme)
-                      : client.getTheme().value == 1
-                          ? client.getTranslation(TranslationKey.lightTheme)
-                          : client.getTranslation(
-                              TranslationKey.system,
-                            ),
-                  style: TextStyle(
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                IconButton(
-                  onPressed: client.getTheme().value != 2
-                      ? () {
-                          setState(() {
-                            client.setAppTheme(AppTheme.getNext(
-                              client.getTheme(),
-                            ));
-                          });
-                        }
-                      : () {
-                          setState(() {
-                            client.setAppTheme(AppTheme.dark);
-                          });
-                        },
-                  icon: Icon(
-                    Icons.arrow_forward,
-                    color: client.getColor(ColorName.text1),
-                  ),
-                ),
-              ],
+            Container(
+              margin: const EdgeInsets.only(
+                bottom: 20,
+              ),
+              child: Button(
+                  client: client,
+                  text: client.translate("settings.save"),
+                  onPressed: () {
+                    client.setAppTheme(theme);
+                    client.setLanguage(language);
+
+                    Navigator.pop(context);
+
+                    client.reloadSettings();
+                  }),
             ),
           ],
         ),

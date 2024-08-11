@@ -65,8 +65,10 @@ class _MyHomePageState extends State<EndPage> {
           ColorName.background,
         ),
         elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
         ),
       ),
       body: Center(

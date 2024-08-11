@@ -47,8 +47,10 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
         backgroundColor: client.getColor(
           ColorName.background,
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
+        iconTheme: IconThemeData(
+          color: client.getColor(
+            ColorName.text1,
+          ),
         ),
         elevation: 0,
       ),
