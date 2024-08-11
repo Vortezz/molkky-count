@@ -3,6 +3,7 @@ import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/components/button.dart';
 import 'package:molkkycount/components/text.dart';
+import 'package:molkkycount/pages/about.dart';
 import 'package:molkkycount/pages/games_history.dart';
 import 'package:molkkycount/pages/player_selection.dart';
 import 'package:molkkycount/pages/settings.dart';
@@ -45,31 +46,49 @@ class _MyHomePageState extends State<HomePage> {
             ColorName.text1,
           ),
         ),
-        title: client.getHistory().games.isEmpty
-            ? null
-            : Row(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.timer_outlined,
-                      color: client.getColor(
-                        ColorName.text1,
+        title: Row(
+          children: [
+            if (client.getHistory().games.isNotEmpty)
+              IconButton(
+                icon: Icon(
+                  Icons.timer_outlined,
+                  color: client.getColor(
+                    ColorName.text1,
+                  ),
+                ),
+                tooltip: client.translate("games_history.title"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => GamesHistoryPage(
+                        client: client,
                       ),
                     ),
-                    tooltip: client.translate("games_history.title"),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => GamesHistoryPage(
-                            client: client,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                  );
+                },
               ),
+            IconButton(
+              icon: Icon(
+                Icons.question_mark_rounded,
+                color: client.getColor(
+                  ColorName.text1,
+                ),
+              ),
+              tooltip: client.translate("about.title"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => AboutPage(
+                      client: client,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(

@@ -65,6 +65,7 @@ class _EditPointsState extends State<EditPoints> {
           "game.edit.title",
         ),
         textType: TextType.subtitle,
+        color: ColorName.black,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -82,6 +83,7 @@ class _EditPointsState extends State<EditPoints> {
                 ],
               ),
             ),
+            color: ColorName.black,
           ),
           if (toDisplay == 0)
             Row(
@@ -93,16 +95,14 @@ class _EditPointsState extends State<EditPoints> {
                   ),
                   child: Icon(
                     Icons.error_outline,
-                    color: client.getColor(
-                      ColorName.text1,
-                    ),
+                    color: Colors.black,
                   ),
                 ),
                 CustomText(
                   text: client.translate("game.edit.nothing_to_display"),
                   client: client,
                   textType: TextType.text,
-                  color: ColorName.text1,
+                  color: ColorName.black,
                 ),
               ],
             ),
@@ -125,6 +125,7 @@ class _EditPointsState extends State<EditPoints> {
                     ),
                   ),
                   textType: TextType.emphasis,
+                  color: ColorName.black,
                 ),
                 CompactGameComponent(
                   client: client,
@@ -137,6 +138,7 @@ class _EditPointsState extends State<EditPoints> {
                   playerPoints:
                       pointsHistory[currentPlayer.pointsHistory.length - 1 - i],
                   isSmall: true,
+                  isBlack: true,
                 )
               ],
             ),
@@ -145,7 +147,7 @@ class _EditPointsState extends State<EditPoints> {
               text: client.translate("game.edit.rows_not_displayed"),
               client: client,
               textType: TextType.text,
-              color: ColorName.text1,
+              color: ColorName.black,
             ),
         ],
       ),
@@ -158,6 +160,7 @@ class _EditPointsState extends State<EditPoints> {
               "game.edit.cancel",
             ),
             textType: TextType.emphasis,
+            color: ColorName.black,
           ),
         ),
         TextButton(

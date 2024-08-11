@@ -107,7 +107,9 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                             Text(
                               SchedulerBinding
                                       .instance.window.alwaysUse24HourFormat
-                                  ? DateFormat().addPattern("d/M/y H:m").format(
+                                  ? DateFormat()
+                                      .addPattern("dd/MM/yyyy HH:mm")
+                                      .format(
                                         DateTime.fromMillisecondsSinceEpoch(
                                           games[currentGameId].key,
                                         ),

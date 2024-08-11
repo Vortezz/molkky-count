@@ -52,5 +52,7 @@
   "theme.dark": "Dark",
   "language.english": "English",
   "language.french": "French",
-  "games_history.title": "Game history"
+  "games_history.title": "Game history",
+  "about.title": "About",
+  "about.description": "This application was created by Vortezz and is open-source. You can find the source code by clicking on the button below. The terms of use and privacy policy are available by clicking on the links below and are the same as the vortezz.dev website."
 }

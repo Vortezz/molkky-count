@@ -67,12 +67,14 @@ class _GamePageState extends State<GamePage> {
                     "game.quit.title",
                   ),
                   textType: TextType.subtitle,
+                  color: ColorName.black,
                 ),
                 content: CustomText(
                   client: client,
                   text: client.translate(
                     "game.quit.content",
                   ),
+                  color: ColorName.black,
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -82,6 +84,7 @@ class _GamePageState extends State<GamePage> {
                       text: client.translate(
                         "game.quit.cancel",
                       ),
+                      color: ColorName.black,
                       textType: TextType.emphasis,
                     ),
                   ),
@@ -136,7 +139,7 @@ class _GamePageState extends State<GamePage> {
                               ThreeFailAction.nothing
                       ? ColorName.color2
                       : ColorName.text1,
-              text: currentPlayer.name,
+              text: currentPlayer.teamStatus.icon + " " + currentPlayer.name,
               textType: TextType.title,
             ),
             client.game.gameSettings.cosyType

@@ -9,12 +9,14 @@ class CompactGameComponent extends StatefulWidget {
     required this.setPlayerPoints,
     required this.playerPoints,
     this.isSmall = false,
+    this.isBlack = false,
   });
 
   final Client client;
   final Function(int, bool) setPlayerPoints;
   final int playerPoints;
   final bool isSmall;
+  final bool isBlack;
 
   @override
   State<CompactGameComponent> createState() {
@@ -29,6 +31,7 @@ class _CompactGameComponentState extends State<CompactGameComponent> {
   late FocusNode focusNode;
   late int playerPoints;
   late Function(int, bool) setPlayerPoints;
+  late bool isBlack;
 
   @override
   void initState() {
@@ -38,6 +41,7 @@ class _CompactGameComponentState extends State<CompactGameComponent> {
     focusNode = FocusNode();
     controller = TextEditingController(text: playerPoints.toString());
     isSmall = widget.isSmall;
+    isBlack = widget.isBlack;
     super.initState();
   }
 
@@ -76,8 +80,10 @@ class _CompactGameComponentState extends State<CompactGameComponent> {
             icon: Icon(
               Icons.remove,
               color: playerPoints > 0
-                  ? client.getColor(ColorName.text1)
-                  : client.getColor(ColorName.text2),
+                  ? (isBlack ? Colors.black : client.getColor(ColorName.text1))
+                  : (isBlack
+                      ? Colors.black.withOpacity(0.2)
+                      : client.getColor(ColorName.text2)),
             ),
           ),
           Container(
@@ -87,9 +93,11 @@ class _CompactGameComponentState extends State<CompactGameComponent> {
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: client.getColor(
-                  ColorName.text1,
-                ),
+                color: isBlack
+                    ? Colors.black
+                    : client.getColor(
+                        ColorName.text1,
+                      ),
                 fontSize: 22,
                 fontWeight: FontWeight.w300,
               ),
@@ -100,9 +108,11 @@ class _CompactGameComponentState extends State<CompactGameComponent> {
                 border: InputBorder.none,
                 hintText: "0",
                 hintStyle: TextStyle(
-                  color: client.getColor(
-                    ColorName.text2,
-                  ),
+                  color: isBlack
+                      ? Colors.black.withOpacity(0.5)
+                      : client.getColor(
+                          ColorName.text2,
+                        ),
                   fontSize: 16,
                   fontWeight: FontWeight.w300,
                 ),
@@ -157,8 +167,16 @@ class _CompactGameComponentState extends State<CompactGameComponent> {
             icon: Icon(
               Icons.add,
               color: playerPoints < 12
-                  ? client.getColor(ColorName.text1)
-                  : client.getColor(ColorName.text2),
+                  ? (isBlack
+                      ? Colors.black
+                      : client.getColor(
+                          ColorName.text1,
+                        ))
+                  : (isBlack
+                      ? Colors.black.withOpacity(0.2)
+                      : client.getColor(
+                          ColorName.text2,
+                        )),
             ),
           ),
         ],

@@ -6,4 +6,5 @@ enum ColorName {
   color2,
   color3,
   white,
+  black,
 }

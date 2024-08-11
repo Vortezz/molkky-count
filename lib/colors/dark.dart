@@ -10,6 +10,7 @@ class DarkColors {
     ColorName.color2: const Color(0xffEC2C44),
     ColorName.color3: const Color(0xffFFB82B),
     ColorName.white: Colors.white,
+    ColorName.black: Colors.black,
   };
 
   Color? getColorFromName(ColorName colorName) {
