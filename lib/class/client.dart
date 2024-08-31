@@ -110,6 +110,11 @@ class Client with EventEmitter {
       default:
         _language = Language.system;
         systemLanguage = SchedulerBinding.instance.window.locale.languageCode;
+
+        if (!translations.containsKey(systemLanguage)) {
+          systemLanguage = "en";
+        }
+
         preferences.setString("molkky.language", "system");
         break;
     }
