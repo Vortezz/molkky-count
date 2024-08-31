@@ -96,6 +96,10 @@ class Client with EventEmitter {
       case "system":
         _language = Language.system;
         systemLanguage = SchedulerBinding.instance.window.locale.languageCode;
+
+        if (!translations.containsKey(systemLanguage)) {
+          systemLanguage = "en";
+        }
         break;
       case "en":
         _language = Language.en;
