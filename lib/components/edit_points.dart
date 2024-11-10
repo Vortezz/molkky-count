@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/components/compact_game.dart';
-import 'package:molkkycount/components/text.dart';
 
 class EditPoints extends StatefulWidget {
   const EditPoints({
@@ -15,7 +15,7 @@ class EditPoints extends StatefulWidget {
     required this.validatePoints,
   }) : super(key: key);
 
-  final Client client;
+  final MolkkyClient client;
   final Player currentPlayer;
   final Function(List<int>, int) validatePoints;
 
@@ -26,7 +26,7 @@ class EditPoints extends StatefulWidget {
 }
 
 class _EditPointsState extends State<EditPoints> {
-  late Client client;
+  late MolkkyClient client;
   late List<TextEditingController> controllers;
   late List<FocusNode> focusNodes;
   late Player currentPlayer;
@@ -65,7 +65,7 @@ class _EditPointsState extends State<EditPoints> {
           "game.edit.title",
         ),
         textType: TextType.subtitle,
-        color: ColorName.black,
+        color: client.getColor(ColorName.black),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -83,7 +83,7 @@ class _EditPointsState extends State<EditPoints> {
                 ],
               ),
             ),
-            color: ColorName.black,
+            color: client.getColor(ColorName.black),
           ),
           if (toDisplay == 0)
             Row(
@@ -102,7 +102,7 @@ class _EditPointsState extends State<EditPoints> {
                   text: client.translate("game.edit.nothing_to_display"),
                   client: client,
                   textType: TextType.text,
-                  color: ColorName.black,
+                  color: client.getColor(ColorName.black),
                 ),
               ],
             ),
@@ -125,7 +125,7 @@ class _EditPointsState extends State<EditPoints> {
                     ),
                   ),
                   textType: TextType.emphasis,
-                  color: ColorName.black,
+                  color: client.getColor(ColorName.black),
                 ),
                 CompactGameComponent(
                   client: client,
@@ -147,7 +147,7 @@ class _EditPointsState extends State<EditPoints> {
               text: client.translate("game.edit.rows_not_displayed"),
               client: client,
               textType: TextType.text,
-              color: ColorName.black,
+              color: client.getColor(ColorName.black),
             ),
         ],
       ),
@@ -160,7 +160,7 @@ class _EditPointsState extends State<EditPoints> {
               "game.edit.cancel",
             ),
             textType: TextType.emphasis,
-            color: ColorName.black,
+            color: client.getColor(ColorName.black),
           ),
         ),
         TextButton(
@@ -173,7 +173,7 @@ class _EditPointsState extends State<EditPoints> {
             text: client.translate(
               "game.edit.save",
             ),
-            color: ColorName.color2,
+            color: client.getColor(ColorName.color2),
             textType: TextType.emphasis,
           ),
         ),

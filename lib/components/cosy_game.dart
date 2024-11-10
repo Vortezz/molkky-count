@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
 import 'package:molkkycount/components/game_pin.dart';
-import 'package:molkkycount/components/text.dart';
 
 class CosyGameComponent extends StatelessWidget {
   const CosyGameComponent(
       {super.key, required this.client, required this.selectedPins});
 
-  final Client client;
+  final MolkkyClient client;
   final List<int> selectedPins;
 
   @override
@@ -25,7 +25,7 @@ class CosyGameComponent extends StatelessWidget {
             client: client,
             text: client.translate("game.fallen_pins"),
             textType: TextType.text,
-            color: ColorName.text1,
+            color: client.getColor(ColorName.text1),
           ),
         ),
         Container(

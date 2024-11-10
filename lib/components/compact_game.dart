@@ -12,7 +12,7 @@ class CompactGameComponent extends StatefulWidget {
     this.isBlack = false,
   });
 
-  final Client client;
+  final MolkkyClient client;
   final Function(int, bool) setPlayerPoints;
   final int playerPoints;
   final bool isSmall;
@@ -25,7 +25,7 @@ class CompactGameComponent extends StatefulWidget {
 }
 
 class _CompactGameComponentState extends State<CompactGameComponent> {
-  late Client client;
+  late MolkkyClient client;
   late TextEditingController controller;
   late bool isSmall;
   late FocusNode focusNode;

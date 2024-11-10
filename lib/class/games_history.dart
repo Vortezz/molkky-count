@@ -16,7 +16,7 @@ class GameHistory {
 
 class GamesHistory {
   final Map<int, GameHistory> games = {};
-  late final Client client;
+  late final MolkkyClient client;
 
   GamesHistory(String history, this.client) {
     jsonDecode(history).forEach((key, value) {
