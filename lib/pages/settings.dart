@@ -143,6 +143,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     client: client,
                     data: [
                       IconPickerData(
+                        icon: "⚙️",
+                        text: client.translate("settings.system"),
+                      ),
+                      IconPickerData(
                         icon: "🇬🇧",
                         text: client.translate("language.english"),
                       ),
@@ -151,8 +155,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: client.translate("language.french"),
                       ),
                       IconPickerData(
-                        icon: "⚙️",
-                        text: client.translate("settings.system"),
+                        icon: "🇩🇪",
+                        text: client.translate("language.german"),
                       ),
                     ],
                     onPressed: (index) {
