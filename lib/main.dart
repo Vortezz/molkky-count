@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         fontFamily: "OpenSans",
       ),
       home: HomePage(
-        client: Client(),
+        client: MolkkyClient(),
       ),
       debugShowCheckedModeBanner: false,
     );

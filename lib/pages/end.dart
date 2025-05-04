@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/button.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/games_history.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/button.dart';
 import 'package:molkkycount/pages/home.dart';
 
 import '../class/player.dart';
@@ -12,14 +12,14 @@ import '../class/player.dart';
 class EndPage extends StatefulWidget {
   const EndPage({Key? key, required this.client}) : super(key: key);
 
-  final Client client;
+  final MolkkyClient client;
 
   @override
   State<EndPage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<EndPage> {
-  late Client client;
+  late MolkkyClient client;
 
   @override
   void initState() {
@@ -198,6 +198,7 @@ class _MyHomePageState extends State<EndPage> {
               ),
               child: Button(
                 text: client.translate("end.home"),
+                isBlack: !client.darkTheme,
                 onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,

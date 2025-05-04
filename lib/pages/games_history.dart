@@ -12,14 +12,14 @@ import 'package:molkkycount/enums/team_status.dart';
 class GamesHistoryPage extends StatefulWidget {
   const GamesHistoryPage({Key? key, required this.client}) : super(key: key);
 
-  final Client client;
+  final MolkkyClient client;
 
   @override
   State<GamesHistoryPage> createState() => _GamesHistoryPageState();
 }
 
 class _GamesHistoryPageState extends State<GamesHistoryPage> {
-  late Client client;
+  late MolkkyClient client;
   late List<MapEntry<int, GameHistory>> games;
 
   int currentGameId = 0;
@@ -172,14 +172,17 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                       itemCount: currentGame.scores.length +
                           currentGame.eliminatedPlayers.length,
                       itemBuilder: (context, index) {
-                        List<Player> players = currentGame.scores.entries
-                            .map(
-                              (e) => Player(
-                                name: e.key,
-                                teamStatus: TeamStatus.solo,
-                              ),
-                            )
-                            .toList();
+                        List<Player> players =
+                            currentGame.scores.entries.map((e) {
+                          Player player = Player(
+                            name: e.key,
+                            teamStatus: TeamStatus.solo,
+                          );
+
+                          player.currentScore = e.value;
+
+                          return player;
+                        }).toList();
                         players.sort(
                             (a, b) => b.currentScore.compareTo(a.currentScore));
                         List<Player> eliminatedPlayers =

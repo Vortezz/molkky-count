@@ -10,7 +10,7 @@ class GamePin extends StatelessWidget {
       required this.number})
       : super(key: key);
 
-  final Client client;
+  final MolkkyClient client;
 
   final List<int> selectedPins;
   final int number;

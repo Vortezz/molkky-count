@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/button.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/button.dart';
-import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/pages/about.dart';
 import 'package:molkkycount/pages/games_history.dart';
 import 'package:molkkycount/pages/player_selection.dart';
@@ -11,14 +11,14 @@ import 'package:molkkycount/pages/settings.dart';
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.client}) : super(key: key);
 
-  final Client client;
+  final MolkkyClient client;
 
   @override
   State<HomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<HomePage> {
-  late Client client;
+  late MolkkyClient client;
 
   @override
   void initState() {
@@ -137,7 +137,7 @@ class _MyHomePageState extends State<HomePage> {
                   text: client.translate("home.title"),
                   client: client,
                   textType: TextType.title,
-                  color: ColorName.text1,
+                  color: client.getColor(ColorName.text1),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.8,
@@ -145,7 +145,7 @@ class _MyHomePageState extends State<HomePage> {
                     text: client.translate("home.description"),
                     client: client,
                     textType: TextType.text,
-                    color: ColorName.text1,
+                    color: client.getColor(ColorName.text1),
                   ),
                 ),
               ],
@@ -157,6 +157,7 @@ class _MyHomePageState extends State<HomePage> {
               child: Button(
                 client: client,
                 text: client.translate("home.start_game"),
+                isBlack: !client.darkTheme,
                 onPressed: () {
                   Navigator.push(
                     context,

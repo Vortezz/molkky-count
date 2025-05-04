@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({Key? key, required this.client}) : super(key: key);
 
-  final Client client;
+  final MolkkyClient client;
 
   @override
   State<AboutPage> createState() => _AboutPageState();
 }
 
 class _AboutPageState extends State<AboutPage> {
-  late Client client;
+  late MolkkyClient client;
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _AboutPageState extends State<AboutPage> {
               child: CustomText(
                 client: client,
                 text: client.translate("about.description"),
-                color: ColorName.text1,
+                color: client.getColor(ColorName.text1),
               ),
             ),
             Center(

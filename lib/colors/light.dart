@@ -13,7 +13,7 @@ class LightColors {
     ColorName.black: Colors.black,
   };
 
-  Color? getColorFromName(ColorName colorName) {
-    return lightColors[colorName];
+  Color getColorFromName(ColorName colorName) {
+    return lightColors[colorName] ?? Colors.white;
   }
 }

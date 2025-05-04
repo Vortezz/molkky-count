@@ -1,14 +1,14 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/button.dart';
+import 'package:flutter_vortezz_base/components/icon_picker.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/game.dart';
 import 'package:molkkycount/class/game_settings.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/button.dart';
-import 'package:molkkycount/components/icon_picker.dart';
-import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/enums/three_fail_action.dart';
 import 'package:molkkycount/pages/game.dart';
 
@@ -16,7 +16,7 @@ class GameSettingsPage extends StatefulWidget {
   const GameSettingsPage(
       {super.key, required this.client, required this.players});
 
-  final Client client;
+  final MolkkyClient client;
   final List<Player> players;
 
   @override
@@ -24,7 +24,7 @@ class GameSettingsPage extends StatefulWidget {
 }
 
 class _GameSettingsPageState extends State<GameSettingsPage> {
-  late Client client;
+  late MolkkyClient client;
   late List<Player> players;
 
   ThreeFailAction threeFailAction = ThreeFailAction.nothing;
@@ -67,7 +67,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                 text: client.translate("game_settings.title"),
                 client: client,
                 textType: TextType.title,
-                color: ColorName.text1,
+                color: client.getColor(ColorName.text1),
               ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.8,
@@ -80,7 +80,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                           text: client.translate("game_settings.three_fails"),
                           client: client,
                           textType: TextType.emphasis,
-                          color: ColorName.text1,
+                          color: client.getColor(ColorName.text1),
                         ),
                       ),
                     ),
@@ -95,7 +95,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                               "game_settings.three_fails.description"),
                           client: client,
                           textType: TextType.text,
-                          color: ColorName.text1,
+                          color: client.getColor(ColorName.text1),
                           textAlign: TextAlign.left,
                         ),
                       ),
@@ -130,7 +130,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                           text: client.translate("game_settings.game_mode"),
                           client: client,
                           textType: TextType.emphasis,
-                          color: ColorName.text1,
+                          color: client.getColor(ColorName.text1),
                         ),
                       ),
                     ),
@@ -145,7 +145,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                               .translate("game_settings.game_mode.description"),
                           client: client,
                           textType: TextType.text,
-                          color: ColorName.text1,
+                          color: client.getColor(ColorName.text1),
                           textAlign: TextAlign.left,
                         ),
                       ),
@@ -177,6 +177,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                 child: Button(
                   client: client,
                   text: client.translate("game_settings.start_game"),
+                  isBlack: !client.darkTheme,
                   onPressed: () {
                     FocusManager.instance.primaryFocus?.unfocus();
 

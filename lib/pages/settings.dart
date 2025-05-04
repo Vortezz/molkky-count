@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/button.dart';
+import 'package:flutter_vortezz_base/components/icon_picker.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
+import 'package:flutter_vortezz_base/enum/app_theme.dart';
+import 'package:flutter_vortezz_base/struct/language.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/colors/theme.dart';
-import 'package:molkkycount/components/button.dart';
-import 'package:molkkycount/components/icon_picker.dart';
-import 'package:molkkycount/components/text.dart';
-import 'package:molkkycount/enums/language.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key, required this.client});
 
-  final Client client;
+  final MolkkyClient client;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late Client client;
+  late MolkkyClient client;
 
   AppTheme theme = AppTheme.system;
   Language language = Language.system;
@@ -26,8 +26,8 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     client = widget.client;
     setState(() {
-      language = client.getLanguage();
-      theme = client.getTheme();
+      language = client.language;
+      theme = client.appTheme;
     });
 
     super.initState();
@@ -58,7 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
               text: client.translate("settings.title"),
               client: client,
               textType: TextType.title,
-              color: ColorName.text1,
+              color: client.getColor(ColorName.text1),
             ),
             Container(
               width: MediaQuery.of(context).size.width * 0.8,
@@ -71,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: client.translate("settings.theme"),
                         client: client,
                         textType: TextType.emphasis,
-                        color: ColorName.text1,
+                        color: client.getColor(ColorName.text1),
                       ),
                     ),
                   ),
@@ -85,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: client.translate("settings.theme.description"),
                         client: client,
                         textType: TextType.text,
-                        color: ColorName.text1,
+                        color: client.getColor(ColorName.text1),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -120,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: client.translate("settings.language"),
                         client: client,
                         textType: TextType.emphasis,
-                        color: ColorName.text1,
+                        color: client.getColor(ColorName.text1),
                       ),
                     ),
                   ),
@@ -134,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: client.translate("settings.language.description"),
                         client: client,
                         textType: TextType.text,
-                        color: ColorName.text1,
+                        color: client.getColor(ColorName.text1),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -142,6 +142,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   IconPicker(
                     client: client,
                     data: [
+                      IconPickerData(
+                        icon: "⚙️",
+                        text: client.translate("settings.system"),
+                      ),
                       IconPickerData(
                         icon: "🇬🇧",
                         text: client.translate("language.english"),
@@ -151,8 +155,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         text: client.translate("language.french"),
                       ),
                       IconPickerData(
-                        icon: "⚙️",
-                        text: client.translate("settings.system"),
+                        icon: "🇩🇪",
+                        text: client.translate("language.german"),
                       ),
                     ],
                     onPressed: (index) {
@@ -172,9 +176,10 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Button(
                   client: client,
                   text: client.translate("settings.save"),
+                  isBlack: !client.darkTheme,
                   onPressed: () {
-                    client.setAppTheme(theme);
-                    client.setLanguage(language);
+                    client.appTheme = theme;
+                    client.language = language;
 
                     Navigator.pop(context);
 

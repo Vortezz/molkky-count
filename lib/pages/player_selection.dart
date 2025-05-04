@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/button.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/button.dart';
-import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/pages/add_player.dart';
 import 'package:molkkycount/pages/game_settings.dart';
 
@@ -13,14 +13,14 @@ class PlayerSelectionPage extends StatefulWidget {
     required this.client,
   });
 
-  final Client client;
+  final MolkkyClient client;
 
   @override
   State<PlayerSelectionPage> createState() => _PlayerSelectionPageState();
 }
 
 class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
-  late Client client;
+  late MolkkyClient client;
   late String category;
 
   ScrollController _scrollController = ScrollController();
@@ -65,7 +65,7 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                     text: client.translate("player_selection.title"),
                     client: client,
                     textType: TextType.title,
-                    color: ColorName.text1,
+                    color: client.getColor(ColorName.text1),
                   ),
                   players.isEmpty
                       ? Container(
@@ -92,7 +92,7 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                                     .translate("player_selection.no_player"),
                                 client: client,
                                 textType: TextType.text,
-                                color: ColorName.text1,
+                                color: client.getColor(ColorName.text1),
                               ),
                             ],
                           ),
@@ -132,7 +132,8 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                                           text: player.name,
                                           client: client,
                                           textType: TextType.subtitle,
-                                          color: ColorName.text1,
+                                          color:
+                                              client.getColor(ColorName.text1),
                                         ),
                                       ),
                                     ],
@@ -203,10 +204,11 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                         });
                       },
                       client: client,
-                      isColored: false,
+                      isBlack: !client.darkTheme,
                     ),
                     Button(
                       text: client.translate("player_selection.continue"),
+                      isBlack: !client.darkTheme,
                       onPressed: () {
                         FocusManager.instance.primaryFocus?.unfocus();
 

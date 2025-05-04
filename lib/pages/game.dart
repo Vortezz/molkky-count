@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/button.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/button.dart';
 import 'package:molkkycount/components/compact_game.dart';
 import 'package:molkkycount/components/cosy_game.dart';
 import 'package:molkkycount/components/edit_points.dart';
-import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/enums/three_fail_action.dart';
 import 'package:molkkycount/pages/end.dart';
 import 'package:molkkycount/pages/home.dart';
@@ -16,14 +16,14 @@ import 'package:molkkycount/pages/home.dart';
 class GamePage extends StatefulWidget {
   const GamePage({Key? key, required this.client}) : super(key: key);
 
-  final Client client;
+  final MolkkyClient client;
 
   @override
   State<GamePage> createState() => _GamePageState();
 }
 
 class _GamePageState extends State<GamePage> {
-  late Client client;
+  late MolkkyClient client;
 
   late Player currentPlayer;
   int playerPoints = 0;
@@ -67,14 +67,14 @@ class _GamePageState extends State<GamePage> {
                     "game.quit.title",
                   ),
                   textType: TextType.subtitle,
-                  color: ColorName.black,
+                  color: client.getColor(ColorName.black),
                 ),
                 content: CustomText(
                   client: client,
                   text: client.translate(
                     "game.quit.content",
                   ),
-                  color: ColorName.black,
+                  color: client.getColor(ColorName.black),
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -84,7 +84,7 @@ class _GamePageState extends State<GamePage> {
                       text: client.translate(
                         "game.quit.cancel",
                       ),
-                      color: ColorName.black,
+                      color: client.getColor(ColorName.black),
                       textType: TextType.emphasis,
                     ),
                   ),
@@ -105,7 +105,7 @@ class _GamePageState extends State<GamePage> {
                       text: client.translate(
                         "game.quit.leave",
                       ),
-                      color: ColorName.color2,
+                      color: client.getColor(ColorName.color2),
                       textType: TextType.emphasis,
                     ),
                   ),
@@ -130,7 +130,7 @@ class _GamePageState extends State<GamePage> {
           children: [
             CustomText(
               client: client,
-              color: currentPlayer.failedAttemps == 1 &&
+              color: client.getColor(currentPlayer.failedAttemps == 1 &&
                       client.game.gameSettings.whenThreeFailInRow !=
                           ThreeFailAction.nothing
                   ? ColorName.color3
@@ -138,7 +138,7 @@ class _GamePageState extends State<GamePage> {
                           client.game.gameSettings.whenThreeFailInRow !=
                               ThreeFailAction.nothing
                       ? ColorName.color2
-                      : ColorName.text1,
+                      : ColorName.text1),
               text: currentPlayer.teamStatus.icon + " " + currentPlayer.name,
               textType: TextType.title,
             ),
@@ -159,7 +159,7 @@ class _GamePageState extends State<GamePage> {
                           client: client,
                           text: client.translate("game.enter_score"),
                           textType: TextType.text,
-                          color: ColorName.text1,
+                          color: client.getColor(ColorName.text1),
                         ),
                       ),
                       CompactGameComponent(
@@ -379,6 +379,7 @@ class _GamePageState extends State<GamePage> {
               ),
               child: Button(
                 text: client.translate("game.next"),
+                isBlack: !client.darkTheme,
                 onPressed: () {
                   setState(() {
                     resolvePlayerPoints(currentPlayer);

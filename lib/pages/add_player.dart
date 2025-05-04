@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_vortezz_base/components/button.dart';
+import 'package:flutter_vortezz_base/components/icon_picker.dart';
+import 'package:flutter_vortezz_base/components/text.dart';
 import 'package:molkkycount/class/client.dart';
 import 'package:molkkycount/class/player.dart';
 import 'package:molkkycount/colors/colors_name.dart';
-import 'package:molkkycount/components/button.dart';
-import 'package:molkkycount/components/icon_picker.dart';
-import 'package:molkkycount/components/text.dart';
 import 'package:molkkycount/enums/team_status.dart';
 
 class AddPlayerPage extends StatefulWidget {
   const AddPlayerPage(
       {super.key, required this.client, required this.onAddPlayer});
 
-  final Client client;
+  final MolkkyClient client;
   final Function(Player) onAddPlayer;
 
   @override
@@ -19,7 +19,7 @@ class AddPlayerPage extends StatefulWidget {
 }
 
 class _AddPlayerPageState extends State<AddPlayerPage> {
-  late Client client;
+  late MolkkyClient client;
   late TextEditingController _controller;
 
   String name = "";
@@ -62,7 +62,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                 text: client.translate("add_player.title"),
                 client: client,
                 textType: TextType.title,
-                color: ColorName.text1,
+                color: client.getColor(ColorName.text1),
               ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.8,
@@ -78,7 +78,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                           text: client.translate("add_player.name"),
                           client: client,
                           textType: TextType.emphasis,
-                          color: ColorName.text1,
+                          color: client.getColor(ColorName.text1),
                         ),
                       ),
                     ),
@@ -95,7 +95,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                               .getColor(
                                 ColorName.text1,
                               )
-                              ?.withOpacity(0.5),
+                              .withOpacity(0.5),
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -127,7 +127,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                           text: client.translate("add_player.team_type"),
                           client: client,
                           textType: TextType.emphasis,
-                          color: ColorName.text1,
+                          color: client.getColor(ColorName.text1),
                         ),
                       ),
                     ),
@@ -158,6 +158,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                 child: Button(
                   client: client,
                   text: client.translate("add_player.button"),
+                  isBlack: !client.darkTheme,
                   onPressed: () {
                     FocusManager.instance.primaryFocus?.unfocus();
 
@@ -177,7 +178,7 @@ class _AddPlayerPageState extends State<AddPlayerPage> {
                             text: client.translate("add_player.already_exists"),
                             client: client,
                             textType: TextType.subtitle,
-                            color: ColorName.text1,
+                            color: client.getColor(ColorName.text1),
                           ),
                           backgroundColor: Colors.red,
                         ),
