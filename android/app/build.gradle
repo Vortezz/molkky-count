@@ -27,7 +27,7 @@ android {
     namespace = "dev.vortezz.molkkycount"
     compileSdkVersion flutter.compileSdkVersion
 
-    ndkVersion "25.1.8937393"
+    ndkVersion "26.1.10909125"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -45,8 +45,8 @@ android {
     defaultConfig {
         applicationId "dev.vortezz.molkkycount"
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode 17
+        targetSdkVersion 35
+        versionCode 18
         versionName flutterVersionName
     }
 
