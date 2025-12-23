@@ -41,6 +41,7 @@
   "game_settings.start_game": "Spiel starten",
   "end.title": "Spiel beendet!",
   "end.home": "Zur Startseite",
+  "end.restart": "Nochmal spielen",
   "settings.title": "Einstellungen",
   "settings.language": "Sprache",
   "settings.language.description": "Wählen Sie die Sprache der App",

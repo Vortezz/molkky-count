@@ -86,7 +86,7 @@ class _CompactGameComponentState extends State<CompactGameComponent> {
                       : client.getColor(ColorName.text2)),
             ),
           ),
-          Container(
+          SizedBox(
             width: 50,
             child: TextField(
               focusNode: focusNode,

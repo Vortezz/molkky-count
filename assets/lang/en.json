@@ -41,6 +41,7 @@
   "game_settings.start_game": "Start game",
   "end.title": "Game over!",
   "end.home": "Return to home",
+  "end.restart": "Play again",
   "settings.title": "Settings",
   "settings.language": "Language",
   "settings.language.description": "Choose the language of the application",

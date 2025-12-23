@@ -55,7 +55,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
         elevation: 0,
       ),
       body: Container(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: 10,
           right: 10,
         ),
@@ -69,7 +69,7 @@ class _GameSettingsPageState extends State<GameSettingsPage> {
                 textType: TextType.title,
                 color: client.getColor(ColorName.text1),
               ),
-              Container(
+              SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Column(
                   children: [

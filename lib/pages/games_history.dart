@@ -77,7 +77,7 @@ class _GamesHistoryPageState extends State<GamesHistoryPage> {
                 ),
                 games.isEmpty
                     ? Container()
-                    : Container(
+                    : SizedBox(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,

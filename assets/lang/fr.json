@@ -41,6 +41,7 @@
   "game_settings.start_game": "Commencer le jeu",
   "end.title": "Partie terminée !",
   "end.home": "Retour à l'accueil",
+  "end.restart": "Rejouer",
   "settings.title": "Paramètres",
   "settings.language": "Langue",
   "settings.language.description": "Choisissez la langue de l'application",

@@ -41,6 +41,7 @@
   "game_settings.start_game": "Empezar partida",
   "end.title": "¡Partida terminada!",
   "end.home": "Volver al inicio",
+  "end.restart": "Jugar de nuevo",
   "settings.title": "Ajustes",
   "settings.language": "Idioma",
   "settings.language.description": "Elige el idioma de la aplicación",

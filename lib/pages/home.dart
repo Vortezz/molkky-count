@@ -139,7 +139,7 @@ class _MyHomePageState extends State<HomePage> {
                   textType: TextType.title,
                   color: client.getColor(ColorName.text1),
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: CustomText(
                     text: client.translate("home.description"),

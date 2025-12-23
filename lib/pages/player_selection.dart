@@ -23,7 +23,7 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
   late MolkkyClient client;
   late String category;
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   List<Player> players = [];
 
   @override
@@ -50,7 +50,7 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
         elevation: 0,
       ),
       body: Container(
-        padding: EdgeInsets.only(
+        padding: const EdgeInsets.only(
           left: 10,
           right: 10,
         ),

@@ -93,7 +93,7 @@ class _EditPointsState extends State<EditPoints> {
                   margin: const EdgeInsets.only(
                     right: 16,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.error_outline,
                     color: Colors.black,
                   ),

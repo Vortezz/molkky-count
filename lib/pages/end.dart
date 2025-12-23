@@ -1,10 +1,14 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_vortezz_base/components/button.dart';
 import 'package:molkkycount/class/client.dart';
+import 'package:molkkycount/class/game.dart';
+import 'package:molkkycount/class/game_settings.dart';
 import 'package:molkkycount/class/games_history.dart';
 import 'package:molkkycount/colors/colors_name.dart';
+import 'package:molkkycount/pages/game.dart';
 import 'package:molkkycount/pages/home.dart';
 
 import '../class/player.dart';
@@ -52,6 +56,8 @@ class _MyHomePageState extends State<EndPage> {
             eliminatedScores,
           ),
         );
+
+    print(client.game);
   }
 
   @override
@@ -192,27 +198,76 @@ class _MyHomePageState extends State<EndPage> {
                 },
               ),
             ),
-            Container(
-              margin: const EdgeInsets.only(
-                bottom: 20,
-              ),
-              child: Button(
-                text: client.translate("end.home"),
-                isBlack: !client.darkTheme,
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage(
-                        client: client,
+            Column(children: [
+              Container(
+                margin: const EdgeInsets.only(
+                  bottom: 20,
+                ),
+                child: Button(
+                  text: client.translate("end.restart"),
+                  isBlack: !client.darkTheme,
+                  onPressed: () {
+                    Game oldGame = client.game;
+
+                    client.game = Game(
+                      gameSettings: GameSettings(
+                        whenThreeFailInRow:
+                            oldGame.gameSettings.whenThreeFailInRow,
+                        cosyType: oldGame.gameSettings.cosyType,
                       ),
-                    ),
-                    (route) => false,
-                  );
-                },
-                client: client,
+                    );
+
+                    List<Player> newPlayers = [];
+
+                    for (Player player in oldGame.players) {
+                      newPlayers.add(Player(
+                          name: player.name, teamStatus: player.teamStatus));
+                    }
+
+                    for (Player player in oldGame.eliminatedPlayers) {
+                      newPlayers.add(Player(
+                          name: player.name, teamStatus: player.teamStatus));
+                    }
+
+                    newPlayers.shuffle();
+
+                    client.game.players = Queue<Player>.from(newPlayers);
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => GamePage(
+                          client: client,
+                        ),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  client: client,
+                ),
               ),
-            ),
+              Container(
+                margin: const EdgeInsets.only(
+                  bottom: 20,
+                ),
+                child: Button(
+                  text: client.translate("end.home"),
+                  isBlack: !client.darkTheme,
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => HomePage(
+                          client: client,
+                        ),
+                      ),
+                      (route) => false,
+                    );
+                  },
+                  client: client,
+                ),
+              ),
+            ])
           ],
         ),
       ),
